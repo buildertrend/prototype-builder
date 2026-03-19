@@ -1,0 +1,235 @@
+#!/bin/bash
+# Prototype Builder - Cross-platform installer
+# Usage: curl -fsSL https://raw.githubusercontent.com/buildertrend/prototype-builder/main/install.sh | bash
+# NOTE: intentionally NOT using set -e so we can show friendly errors instead of silently dying
+
+REPO_BASE="https://raw.githubusercontent.com/buildertrend/prototype-builder/main"
+
+echo ""
+echo "  ==================================="
+echo "   Prototype Builder - Setup"
+echo "  ==================================="
+echo ""
+echo "  This will install everything you need to"
+echo "  build app prototypes with Claude Code."
+echo ""
+
+# ------------------------------------------
+# OS Detection
+# ------------------------------------------
+OS="unknown"
+case "$(uname -s)" in
+    Darwin*)  OS="mac" ;;
+    Linux*)
+        if grep -qi microsoft /proc/version 2>/dev/null; then
+            OS="wsl"
+        else
+            OS="linux"
+        fi
+        ;;
+    MINGW*|MSYS*|CYGWIN*)  OS="windows" ;;
+esac
+
+if [ "$OS" = "unknown" ]; then
+    echo "  Could not detect your operating system."
+    echo "  Supported: macOS, Linux, WSL, Git Bash on Windows."
+    exit 1
+fi
+
+echo "  Detected: $OS"
+echo ""
+
+# ------------------------------------------
+# 1. Check for Node.js
+# ------------------------------------------
+echo "  [1/7] Checking for Node.js..."
+if ! command -v node &>/dev/null; then
+    echo "         Not found. Installing Node.js..."
+    if [ "$OS" = "mac" ]; then
+        if ! command -v brew &>/dev/null; then
+            echo "         Homebrew not found. Installing Homebrew first..."
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            # Add brew to PATH for this session
+            if [ -f /opt/homebrew/bin/brew ]; then
+                eval "$(/opt/homebrew/bin/brew shellenv)"
+            elif [ -f /usr/local/bin/brew ]; then
+                eval "$(/usr/local/bin/brew shellenv)"
+            fi
+        fi
+        if command -v brew &>/dev/null; then
+            brew install node
+        else
+            echo ""
+            echo "  ** Could not install Homebrew. **"
+            echo "  Please install Node.js from https://nodejs.org"
+            echo "  then run this script again."
+            exit 1
+        fi
+    elif [ "$OS" = "windows" ]; then
+        if command -v winget &>/dev/null; then
+            winget install OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements
+            # Refresh PATH
+            export PATH="$PROGRAMFILES/nodejs:$APPDATA/npm:$PATH"
+        else
+            echo ""
+            echo "  ** Please install Node.js from https://nodejs.org **"
+            echo "  Download the LTS version, run the installer, then"
+            echo "  close and reopen Git Bash and run this script again."
+            exit 1
+        fi
+    elif [ "$OS" = "linux" ] || [ "$OS" = "wsl" ]; then
+        if command -v apt-get &>/dev/null; then
+            echo "         Using apt to install Node.js..."
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+        elif command -v dnf &>/dev/null; then
+            curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
+            sudo dnf install -y nodejs
+        else
+            echo ""
+            echo "  ** Please install Node.js from https://nodejs.org **"
+            echo "  then run this script again."
+            exit 1
+        fi
+    fi
+
+    if ! command -v node &>/dev/null; then
+        echo ""
+        echo "  ** Node.js installation didn't seem to work. **"
+        echo "  Please install it from https://nodejs.org"
+        echo "  then run this script again."
+        exit 1
+    fi
+    echo "         Installed Node.js $(node --version)"
+else
+    echo "         Found Node.js $(node --version)"
+fi
+
+# ------------------------------------------
+# 2. Check for npm
+# ------------------------------------------
+echo ""
+echo "  [2/7] Checking for npm..."
+if ! command -v npm &>/dev/null; then
+    echo "  npm not found. It should come with Node.js."
+    echo "  Try closing this terminal and running setup again."
+    exit 1
+fi
+echo "         Found npm $(npm --version)"
+
+# ------------------------------------------
+# 3. Install files from GitHub
+# ------------------------------------------
+echo ""
+echo "  [3/7] Installing files..."
+
+# Create directories
+mkdir -p "$HOME/.claude/commands" || { echo "  ** Could not create ~/.claude/commands **"; exit 1; }
+mkdir -p "$HOME/.claude/skills/prototype-builder" || { echo "  ** Could not create skills dir **"; exit 1; }
+mkdir -p "$HOME/.claude/skills/prototype-sharer" || { echo "  ** Could not create skills dir **"; exit 1; }
+mkdir -p "$HOME/prototypes" || { echo "  ** Could not create ~/prototypes **"; exit 1; }
+
+# Download each file
+download() {
+    local src="$1" dest="$2" label="$3"
+    if curl -fsSL "$REPO_BASE/$src" -o "$dest"; then
+        echo "         Installed $label"
+    else
+        echo "         WARNING: Could not download $label"
+    fi
+}
+
+download "commands/prototype.md"              "$HOME/.claude/commands/prototype.md"              "/prototype command"
+download "commands/share.md"                  "$HOME/.claude/commands/share.md"                  "/share command"
+download "skills/prototype-builder/SKILL.md"  "$HOME/.claude/skills/prototype-builder/SKILL.md"  "prototype-builder skill"
+download "skills/prototype-sharer/SKILL.md"   "$HOME/.claude/skills/prototype-sharer/SKILL.md"   "prototype-sharer skill"
+download "prototypes-CLAUDE.md"               "$HOME/prototypes/CLAUDE.md"                       "prototypes CLAUDE.md"
+
+# ------------------------------------------
+# 4. Connect Figma
+# ------------------------------------------
+echo ""
+echo "  [4/7] Connecting Figma..."
+if command -v claude &>/dev/null; then
+    claude mcp add --transport http --scope user figma https://mcp.figma.com/mcp &>/dev/null || true
+    echo "         Figma MCP configured."
+    echo ""
+    echo "         NOTE: The first time you mention a Figma file"
+    echo "         in Claude, your browser will open to log in."
+    echo "         This only happens once."
+else
+    echo "         WARNING: 'claude' command not found."
+    echo "         Install Claude Code first, then re-run this script"
+    echo "         or manually run:"
+    echo "           claude mcp add --transport http --scope user figma https://mcp.figma.com/mcp"
+fi
+
+# ------------------------------------------
+# 5. Pre-warm dependency cache
+# ------------------------------------------
+echo ""
+echo "  [5/7] Pre-downloading dependencies so your first"
+echo "        prototype starts faster..."
+npm cache add create-vite@latest vite@latest react@latest react-dom@latest typescript@latest @vitejs/plugin-react@latest 2>/dev/null || true
+echo "         Done!"
+
+# ------------------------------------------
+# 6. Install Vercel CLI
+# ------------------------------------------
+echo ""
+echo "  [6/7] Installing sharing tools..."
+if ! npm install -g vercel 2>/dev/null; then
+    echo "         WARNING: Could not install sharing tools globally."
+    echo "         Sharing will still work, just a bit slower the first time."
+fi
+
+# ------------------------------------------
+# 7. Vercel login
+# ------------------------------------------
+echo ""
+echo "  [7/7] Setting up sharing account..."
+echo ""
+echo "        Your browser will open so you can create a free"
+echo "        account (or log in). This lets you share your"
+echo "        prototypes with a link."
+echo ""
+if command -v vercel &>/dev/null; then
+    if ! vercel login; then
+        echo ""
+        echo "         WARNING: Could not log in right now."
+        echo "         That's OK - you'll be prompted to log in the"
+        echo "         first time you use /share."
+    fi
+else
+    echo "         Vercel CLI not available — skipping login."
+    echo "         You'll be prompted to log in the first time you use /share."
+fi
+
+# ------------------------------------------
+# Done!
+# ------------------------------------------
+echo ""
+echo "  ==================================="
+echo "   All set!"
+echo "  ==================================="
+echo ""
+echo "  To start building prototypes:"
+echo ""
+echo "    1. Open a terminal"
+echo "    2. Type: claude"
+echo "    3. Describe what you want to build, or type"
+echo "       /prototype followed by a description"
+echo ""
+echo "  To share a prototype with anyone:"
+echo "    /share"
+echo ""
+echo "  Examples:"
+echo "    \"I want an app where I can add items to a"
+echo "     grocery list and check them off\""
+echo ""
+echo "    /prototype A to-do list app where I can add"
+echo "    items and check them off"
+echo ""
+echo "  Your prototypes will be saved in:"
+echo "    ~/prototypes"
+echo ""
