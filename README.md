@@ -1,67 +1,185 @@
 # Prototype Builder
 
-Build web app prototypes by describing what you want. No coding needed.
+Turn plain-language descriptions into working web apps. No coding needed — just describe what you want and Claude builds it for you.
 
 ## Install
 
-Open a terminal and paste this:
+### Prerequisites
 
-    curl -fsSL https://raw.githubusercontent.com/buildertrend/prototype-builder/main/install.sh | bash
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed and working
+- A terminal app (see below)
 
-**Windows users:** Open Git Bash, PowerShell, or Windows Terminal (not Command Prompt).
-If you only have Command Prompt, download and double-click [`install.bat`](https://raw.githubusercontent.com/buildertrend/prototype-builder/main/install.bat) instead.
+### One-liner install
 
-Setup takes about 2 minutes. Your browser will open twice — once for
-Figma and once to set up sharing. Just log in when prompted.
-
-## Uninstall
-
-    curl -fsSL https://raw.githubusercontent.com/buildertrend/prototype-builder/main/uninstall.sh | bash
-
-This removes the commands and skills but keeps your prototypes.
-
-## Usage
-
-1. Open a terminal
-2. Type `claude` and press Enter
-3. Describe what you want to build — or type `/prototype` followed by a description
-
-### Examples
+Open a terminal and paste:
 
 ```
-/prototype I want an app where I can track my daily habits with checkboxes and see a weekly streak
+curl -fsSL https://raw.githubusercontent.com/buildertrend/prototype-builder/main/install.sh | bash
 ```
 
-```
-/prototype A simple dashboard that shows sales numbers in cards with a bar chart at the bottom
-```
+### Which terminal to use
 
-```
-/prototype A recipe organizer where I can add recipes with ingredients and search through them
-```
+| OS | Use |
+|----|-----|
+| **Mac** | Terminal (built-in) or iTerm |
+| **Windows** | Git Bash, PowerShell, or Windows Terminal |
 
-You don't even need the `/prototype` part — just describe what you want and Claude will figure it out.
+> **Windows Command Prompt users:** `curl | bash` won't work in CMD. Instead, download [`install.bat`](https://github.com/buildertrend/prototype-builder/raw/main/install.bat) and double-click it.
 
-### Sharing
+### What the installer does
 
-Type `/share` in Claude to deploy your prototype and get a link anyone can open.
+The installer runs 7 steps — no input needed except logging in when your browser opens.
 
-## Tips
+| Step | What happens |
+|------|-------------|
+| 1. Node.js | Installs Node.js if missing (via Homebrew on Mac, winget on Windows, apt on Linux) |
+| 2. npm | Verifies npm is available (comes with Node) |
+| 3. Files | Downloads commands and skills into `~/.claude/` |
+| 4. Figma | Connects the Figma MCP so Claude can read your designs |
+| 5. Dependencies | Pre-downloads React/Vite so your first prototype starts fast |
+| 6. Sharing tools | Installs Vercel CLI for one-command sharing |
+| 7. Sharing account | Opens your browser to create a free Vercel account |
 
-- **Describe what you want to see and do**, not how to build it — that's handled for you
-- **You'll see permission prompts** — these are Claude asking to create files and run your app. It's safe to approve them.
-- **Ask for changes in plain language** — "make the header blue", "add a button to delete items", "make it look better on mobile"
-- **You can iterate as much as you want** — just keep describing what you'd like to change
-- **Come back anytime** — your prototypes are saved in `~/prototypes`. Just run `claude` and say "I want to keep working on my grocery list app"
-- **Share Figma links** — paste a Figma link and Claude will match the design as closely as possible
+Your browser opens twice during setup — once for Figma (step 4) and once for Vercel (step 7). Just log in when prompted.
 
-## What's Installed
+The installer is **idempotent** — safe to re-run anytime to update to the latest version.
+
+### What gets installed where
 
 | Item | Location |
 |------|----------|
 | `/prototype` command | `~/.claude/commands/prototype.md` |
 | `/share` command | `~/.claude/commands/share.md` |
-| Prototype builder skill | `~/.claude/skills/prototype-builder/` |
-| Prototype sharer skill | `~/.claude/skills/prototype-sharer/` |
-| Prototypes folder | `~/prototypes/` |
+| Prototype builder skill | `~/.claude/skills/prototype-builder/SKILL.md` |
+| Prototype sharer skill | `~/.claude/skills/prototype-sharer/SKILL.md` |
+| Prototypes folder + config | `~/prototypes/CLAUDE.md` |
 | Figma integration | Claude MCP (user scope) |
+
+### Uninstall
+
+```
+curl -fsSL https://raw.githubusercontent.com/buildertrend/prototype-builder/main/uninstall.sh | bash
+```
+
+Removes commands, skills, and the Figma MCP connection. Your prototypes in `~/prototypes/` are **not** deleted.
+
+## Getting Started
+
+### Build your first prototype
+
+1. Open a terminal
+2. Type `claude` and press Enter
+3. Describe what you want to build
+
+That's it. Claude will scaffold the project, install dependencies, and open a live preview — all automatically.
+
+You can also use the `/prototype` command to be explicit:
+
+```
+/prototype A to-do list app where I can add items, check them off, and filter by status
+```
+
+### Examples of things you can build
+
+- **Dashboards** — "A dashboard with sales numbers in cards and a bar chart"
+- **Trackers** — "An app to track daily habits with checkboxes and weekly streaks"
+- **Tools** — "A recipe organizer where I can add recipes and search by ingredient"
+- **Forms** — "A signup page with name, email, and password fields"
+- **From Figma** — paste a Figma link and Claude matches the design
+
+### Iterate on your prototype
+
+Just say what you want to change in plain language:
+
+- "Make the header blue"
+- "Add a button to delete items"
+- "Make it look better on mobile"
+- "Add a search bar at the top"
+
+Claude keeps the app running while making changes — refresh your browser to see updates.
+
+### Share with anyone
+
+Type `/share` in Claude to get a public link. Anyone with the link can see your prototype — no account or install needed on their end.
+
+To update a shared prototype after making changes, just `/share` again. The same link updates automatically.
+
+### Come back to a prototype later
+
+Your prototypes are saved in `~/prototypes/`, each in its own folder. To pick up where you left off:
+
+1. Open a terminal
+2. Type `claude`
+3. Say "I want to keep working on my grocery list app"
+
+### Tips
+
+- **Describe what you want to see and do**, not how to build it
+- **You'll see permission prompts** — Claude asking to create files and run your app. Safe to approve.
+- **Paste Figma links** — Claude reads the design and matches colors, layout, and spacing
+- **Start rough, then refine** — a basic version you can react to is faster than trying to describe everything upfront
+
+## Contributing
+
+### Repo structure
+
+```
+prototype-builder/
+├── commands/
+│   ├── prototype.md          # /prototype slash command
+│   └── share.md              # /share slash command
+├── skills/
+│   ├── prototype-builder/
+│   │   └── SKILL.md          # Auto-triggers when user describes an app
+│   └── prototype-sharer/
+│       └── SKILL.md          # Auto-triggers on "share this", "get me a link", etc.
+├── prototypes-CLAUDE.md      # CLAUDE.md placed in ~/prototypes/ to guide Claude
+├── install.sh                # Cross-platform bash installer
+├── install.bat               # Windows CMD fallback installer
+├── uninstall.sh              # Clean removal script
+└── README.md
+```
+
+### How it works
+
+Prototype Builder is a [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin made up of **commands** and **skills**:
+
+- **Commands** (`/prototype`, `/share`) are explicit slash commands the user types.
+- **Skills** are prompt files that Claude auto-triggers based on what the user says. The prototype-builder skill activates on phrases like "build me an app" or "make a dashboard". The prototype-sharer skill activates on "share this" or "get me a link".
+- **`prototypes-CLAUDE.md`** is placed in `~/prototypes/` to give Claude context about existing prototypes when the user opens Claude in that directory.
+
+Both skills are written for non-technical users — all communication describes behavior ("you'll see a list of items"), never implementation ("a React component with useState").
+
+### Making changes
+
+1. Clone the repo
+2. Edit the files you want to change
+3. Test locally by copying files to `~/.claude/commands/` and `~/.claude/skills/` (or run `install.sh` pointed at your local branch)
+4. Open a PR
+
+### Testing
+
+To test the full install flow from scratch:
+
+```bash
+# Remove existing install
+curl -fsSL https://raw.githubusercontent.com/buildertrend/prototype-builder/main/uninstall.sh | bash
+
+# Install from your branch
+curl -fsSL https://raw.githubusercontent.com/<you>/prototype-builder/<branch>/install.sh | bash
+```
+
+Verify:
+- [ ] All 7 install steps complete without errors
+- [ ] `claude` → `/prototype a simple counter app` → app builds and runs
+- [ ] `/share` → returns a working public URL
+- [ ] Re-running install succeeds (idempotent)
+
+### Editing skills
+
+The skill files (`SKILL.md`) contain detailed instructions for Claude's behavior. Key things to preserve:
+
+- **Non-technical language** — users are designers and PMs, not developers
+- **Error handling** — skills fix build errors silently, only surfacing issues after 2-3 failed attempts
+- **Figma integration** — the builder skill uses Figma MCP tools when the user shares a Figma link
+- **Approval guidance** — the builder skill coaches users through Claude Code's permission prompts
