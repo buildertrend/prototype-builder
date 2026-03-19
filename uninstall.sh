@@ -14,15 +14,26 @@ echo "  Your prototypes in ~/prototypes/ will NOT"
 echo "  be deleted — those are yours to keep."
 echo ""
 
-# Commands
+# Commands (current names)
+if [ -f "$HOME/.claude/commands/prototype-create.md" ]; then
+    rm "$HOME/.claude/commands/prototype-create.md"
+    echo "  Removed /prototype-create command"
+fi
+
+if [ -f "$HOME/.claude/commands/prototype-share.md" ]; then
+    rm "$HOME/.claude/commands/prototype-share.md"
+    echo "  Removed /prototype-share command"
+fi
+
+# Commands (old names — clean up previous installs)
 if [ -f "$HOME/.claude/commands/prototype.md" ]; then
     rm "$HOME/.claude/commands/prototype.md"
-    echo "  Removed /prototype command"
+    echo "  Removed old /prototype command"
 fi
 
 if [ -f "$HOME/.claude/commands/share.md" ]; then
     rm "$HOME/.claude/commands/share.md"
-    echo "  Removed /share command"
+    echo "  Removed old /share command"
 fi
 
 # Skills

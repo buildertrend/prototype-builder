@@ -114,7 +114,7 @@ The user says what to change. Restate in one sentence, make the changes, tell th
 ### 5. Share (if asked)
 
 If the user wants to share their prototype, use the prototype-sharer skill.
-You can offer: "Want to share this with someone? Just say 'share this' and I'll get you a link."
+You can offer: "Want to share this with someone? Just say '/prototype-share' and I'll get you a link."
 
 ## Error Handling
 

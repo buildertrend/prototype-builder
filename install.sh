@@ -139,8 +139,11 @@ download() {
     fi
 }
 
-download "commands/prototype.md"              "$HOME/.claude/commands/prototype.md"              "/prototype command"
-download "commands/share.md"                  "$HOME/.claude/commands/share.md"                  "/share command"
+# Clean up old command names from previous installs
+rm -f "$HOME/.claude/commands/prototype.md" "$HOME/.claude/commands/share.md" 2>/dev/null
+
+download "commands/prototype-create.md"       "$HOME/.claude/commands/prototype-create.md"       "/prototype-create command"
+download "commands/prototype-share.md"        "$HOME/.claude/commands/prototype-share.md"        "/prototype-share command"
 download "skills/prototype-builder/SKILL.md"  "$HOME/.claude/skills/prototype-builder/SKILL.md"  "prototype-builder skill"
 download "skills/prototype-sharer/SKILL.md"   "$HOME/.claude/skills/prototype-sharer/SKILL.md"   "prototype-sharer skill"
 download "prototypes-CLAUDE.md"               "$HOME/prototypes/CLAUDE.md"                       "prototypes CLAUDE.md"
@@ -198,11 +201,11 @@ if command -v vercel &>/dev/null; then
         echo ""
         echo "         WARNING: Could not log in right now."
         echo "         That's OK - you'll be prompted to log in the"
-        echo "         first time you use /share."
+        echo "         first time you use /prototype-share."
     fi
 else
     echo "         Vercel CLI not available — skipping login."
-    echo "         You'll be prompted to log in the first time you use /share."
+    echo "         You'll be prompted to log in the first time you use /prototype-share."
 fi
 
 # ------------------------------------------
@@ -218,17 +221,17 @@ echo ""
 echo "    1. Open a terminal"
 echo "    2. Type: claude"
 echo "    3. Describe what you want to build, or type"
-echo "       /prototype followed by a description"
+echo "       /prototype-create followed by a description"
 echo ""
 echo "  To share a prototype with anyone:"
-echo "    /share"
+echo "    /prototype-share"
 echo ""
 echo "  Examples:"
 echo "    \"I want an app where I can add items to a"
 echo "     grocery list and check them off\""
 echo ""
-echo "    /prototype A to-do list app where I can add"
-echo "    items and check them off"
+echo "    /prototype-create A to-do list app where I can"
+echo "    add items and check them off"
 echo ""
 echo "  Your prototypes will be saved in:"
 echo "    ~/prototypes"

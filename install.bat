@@ -86,19 +86,23 @@ if not exist "%USERPROFILE%\.claude\skills\prototype-builder" mkdir "%USERPROFIL
 if not exist "%USERPROFILE%\.claude\skills\prototype-sharer" mkdir "%USERPROFILE%\.claude\skills\prototype-sharer"
 if not exist "%USERPROFILE%\prototypes" mkdir "%USERPROFILE%\prototypes"
 
+:: Clean up old command names from previous installs
+if exist "%USERPROFILE%\.claude\commands\prototype.md" del "%USERPROFILE%\.claude\commands\prototype.md"
+if exist "%USERPROFILE%\.claude\commands\share.md" del "%USERPROFILE%\.claude\commands\share.md"
+
 :: Download each file using curl (built into Windows 10+)
-curl -fsSL "%REPO_BASE%/commands/prototype.md" -o "%USERPROFILE%\.claude\commands\prototype.md"
+curl -fsSL "%REPO_BASE%/commands/prototype-create.md" -o "%USERPROFILE%\.claude\commands\prototype-create.md"
 if %ERRORLEVEL% equ 0 (
-    echo         Installed /prototype command.
+    echo         Installed /prototype-create command.
 ) else (
-    echo         WARNING: Could not download /prototype command.
+    echo         WARNING: Could not download /prototype-create command.
 )
 
-curl -fsSL "%REPO_BASE%/commands/share.md" -o "%USERPROFILE%\.claude\commands\share.md"
+curl -fsSL "%REPO_BASE%/commands/prototype-share.md" -o "%USERPROFILE%\.claude\commands\prototype-share.md"
 if %ERRORLEVEL% equ 0 (
-    echo         Installed /share command.
+    echo         Installed /prototype-share command.
 ) else (
-    echo         WARNING: Could not download /share command.
+    echo         WARNING: Could not download /prototype-share command.
 )
 
 curl -fsSL "%REPO_BASE%/skills/prototype-builder/SKILL.md" -o "%USERPROFILE%\.claude\skills\prototype-builder\SKILL.md"
@@ -177,11 +181,11 @@ if %ERRORLEVEL% equ 0 (
         echo.
         echo         WARNING: Could not log in right now.
         echo         That's OK - you'll be prompted to log in the
-        echo         first time you use /share.
+        echo         first time you use /prototype-share.
     )
 ) else (
     echo         Vercel CLI not available - skipping login.
-    echo         You'll be prompted to log in the first time you use /share.
+    echo         You'll be prompted to log in the first time you use /prototype-share.
 )
 
 :: ------------------------------------------
@@ -198,17 +202,17 @@ echo    1. Open a terminal (Command Prompt, PowerShell,
 echo       or Windows Terminal)
 echo    2. Type: claude
 echo    3. Describe what you want to build, or type
-echo       /prototype followed by a description
+echo       /prototype-create followed by a description
 echo.
 echo  To share a prototype with anyone:
-echo    /share
+echo    /prototype-share
 echo.
 echo  Examples:
 echo    "I want an app where I can add items to a
 echo     grocery list and check them off"
 echo.
-echo    /prototype A to-do list app where I can add
-echo    items and check them off
+echo    /prototype-create A to-do list app where I can
+echo    add items and check them off
 echo.
 echo  Your prototypes will be saved in:
 echo    %USERPROFILE%\prototypes

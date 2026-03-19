@@ -48,8 +48,8 @@ The installer is **idempotent** — safe to re-run anytime to update to the late
 
 | Item | Location |
 |------|----------|
-| `/prototype` command | `~/.claude/commands/prototype.md` |
-| `/share` command | `~/.claude/commands/share.md` |
+| `/prototype-create` command | `~/.claude/commands/prototype-create.md` |
+| `/prototype-share` command | `~/.claude/commands/prototype-share.md` |
 | Prototype builder skill | `~/.claude/skills/prototype-builder/SKILL.md` |
 | Prototype sharer skill | `~/.claude/skills/prototype-sharer/SKILL.md` |
 | Prototypes folder + config | `~/prototypes/CLAUDE.md` |
@@ -73,10 +73,10 @@ Removes commands, skills, and the Figma MCP connection. Your prototypes in `~/pr
 
 That's it. Claude will scaffold the project, install dependencies, and open a live preview — all automatically.
 
-You can also use the `/prototype` command to be explicit:
+You can also use the `/prototype-create` command to be explicit:
 
 ```
-/prototype A to-do list app where I can add items, check them off, and filter by status
+/prototype-create A to-do list app where I can add items, check them off, and filter by status
 ```
 
 ### Examples of things you can build
@@ -100,9 +100,9 @@ Claude keeps the app running while making changes — refresh your browser to se
 
 ### Share with anyone
 
-Type `/share` in Claude to get a public link. Anyone with the link can see your prototype — no account or install needed on their end.
+Type `/prototype-share` in Claude to get a public link. Anyone with the link can see your prototype — no account or install needed on their end.
 
-To update a shared prototype after making changes, just `/share` again. The same link updates automatically.
+To update a shared prototype after making changes, just `/prototype-share` again. The same link updates automatically.
 
 ### Come back to a prototype later
 
@@ -126,8 +126,8 @@ Your prototypes are saved in `~/prototypes/`, each in its own folder. To pick up
 ```
 prototype-builder/
 ├── commands/
-│   ├── prototype.md          # /prototype slash command
-│   └── share.md              # /share slash command
+│   ├── prototype-create.md    # /prototype-create slash command
+│   └── prototype-share.md    # /prototype-share slash command
 ├── skills/
 │   ├── prototype-builder/
 │   │   └── SKILL.md          # Auto-triggers when user describes an app
@@ -144,7 +144,7 @@ prototype-builder/
 
 Prototype Builder is a [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin made up of **commands** and **skills**:
 
-- **Commands** (`/prototype`, `/share`) are explicit slash commands the user types.
+- **Commands** (`/prototype-create`, `/prototype-share`) are explicit slash commands the user types.
 - **Skills** are prompt files that Claude auto-triggers based on what the user says. The prototype-builder skill activates on phrases like "build me an app" or "make a dashboard". The prototype-sharer skill activates on "share this" or "get me a link".
 - **`prototypes-CLAUDE.md`** is placed in `~/prototypes/` to give Claude context about existing prototypes when the user opens Claude in that directory.
 
@@ -171,8 +171,8 @@ curl -fsSL https://raw.githubusercontent.com/<you>/prototype-builder/<branch>/in
 
 Verify:
 - [ ] All 7 install steps complete without errors
-- [ ] `claude` → `/prototype a simple counter app` → app builds and runs
-- [ ] `/share` → returns a working public URL
+- [ ] `claude` → `/prototype-create a simple counter app` → app builds and runs
+- [ ] `/prototype-share` → returns a working public URL
 - [ ] Re-running install succeeds (idempotent)
 
 ### Editing skills
