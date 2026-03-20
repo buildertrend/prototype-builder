@@ -181,7 +181,7 @@ echo "         Done!"
 # ------------------------------------------
 echo ""
 echo "  [6/7] Installing sharing tools..."
-if ! npm install -g vercel 2>/dev/null; then
+if ! npm install -g vercel &>/dev/null; then
     echo "         WARNING: Could not install sharing tools globally."
     echo "         Sharing will still work, just a bit slower the first time."
 fi
@@ -197,11 +197,14 @@ echo "        account (or log in). This lets you share your"
 echo "        prototypes with a link."
 echo ""
 if command -v vercel &>/dev/null; then
-    if ! vercel login; then
+    vercel login < /dev/tty 2>&1 | grep --line-buffered "vercel.com"
+    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
         echo ""
         echo "         WARNING: Could not log in right now."
         echo "         That's OK - you'll be prompted to log in the"
         echo "         first time you use /prototype-share."
+    else
+        echo "         Logged in!"
     fi
 else
     echo "         Vercel CLI not available — skipping login."

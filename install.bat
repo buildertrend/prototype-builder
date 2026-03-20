@@ -158,7 +158,7 @@ echo         Done!
 :: ------------------------------------------
 echo.
 echo  [6/7] Installing sharing tools...
-call npm install -g vercel 2>nul
+call npm install -g vercel >nul 2>nul
 if %ERRORLEVEL% neq 0 (
     echo         WARNING: Could not install sharing tools globally.
     echo         Sharing will still work, just a bit slower the first time.
@@ -176,12 +176,15 @@ echo         prototypes with a link.
 echo.
 where vercel >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-    call vercel login
-    if %ERRORLEVEL% neq 0 (
+    call vercel login 2>&1 | findstr /i "vercel.com"
+    call vercel whoami >nul 2>nul
+    if !ERRORLEVEL! neq 0 (
         echo.
         echo         WARNING: Could not log in right now.
         echo         That's OK - you'll be prompted to log in the
         echo         first time you use /prototype-share.
+    ) else (
+        echo         Logged in^^!
     )
 ) else (
     echo         Vercel CLI not available - skipping login.
