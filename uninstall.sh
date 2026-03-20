@@ -53,6 +53,15 @@ if [ -f "$HOME/prototypes/CLAUDE.md" ]; then
     echo "  Removed ~/prototypes/CLAUDE.md"
 fi
 
+# Settings in prototypes folder
+if [ -f "$HOME/prototypes/.claude/settings.json" ]; then
+    rm "$HOME/prototypes/.claude/settings.json"
+    echo "  Removed ~/prototypes/.claude/settings.json"
+fi
+if [ -d "$HOME/prototypes/.claude" ]; then
+    rmdir "$HOME/prototypes/.claude" 2>/dev/null
+fi
+
 # Figma MCP
 if command -v claude &>/dev/null; then
     claude mcp remove figma &>/dev/null || true

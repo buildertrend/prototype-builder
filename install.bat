@@ -85,6 +85,7 @@ if not exist "%USERPROFILE%\.claude\commands" mkdir "%USERPROFILE%\.claude\comma
 if not exist "%USERPROFILE%\.claude\skills\prototype-builder" mkdir "%USERPROFILE%\.claude\skills\prototype-builder"
 if not exist "%USERPROFILE%\.claude\skills\prototype-sharer" mkdir "%USERPROFILE%\.claude\skills\prototype-sharer"
 if not exist "%USERPROFILE%\prototypes" mkdir "%USERPROFILE%\prototypes"
+if not exist "%USERPROFILE%\prototypes\.claude" mkdir "%USERPROFILE%\prototypes\.claude"
 
 :: Clean up old command names from previous installs
 if exist "%USERPROFILE%\.claude\commands\prototype.md" del "%USERPROFILE%\.claude\commands\prototype.md"
@@ -124,6 +125,13 @@ if %ERRORLEVEL% equ 0 (
     echo         Installed prototypes CLAUDE.md.
 ) else (
     echo         WARNING: Could not download prototypes CLAUDE.md.
+)
+
+curl -fsSL "%REPO_BASE%/prototypes-settings.json" -o "%USERPROFILE%\prototypes\.claude\settings.json"
+if %ERRORLEVEL% equ 0 (
+    echo         Installed prototypes settings.
+) else (
+    echo         WARNING: Could not download prototypes settings.
 )
 
 :: ------------------------------------------
