@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Lint Markdown
-        run: npx markdownlint-cli2 '**/*.md' '#node_modules' '#PLAN.md'
+        run: npx markdownlint-cli2 '**/*.md' '#node_modules'
 
   validate-plugin-structure:
     runs-on: ubuntu-latest

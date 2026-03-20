@@ -7,6 +7,7 @@ Turn plain-language descriptions into working web apps. No coding needed — jus
 ### Prerequisites
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed and working
+- **Windows users:** use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) (Windows Subsystem for Linux)
 
 ### Setup
 

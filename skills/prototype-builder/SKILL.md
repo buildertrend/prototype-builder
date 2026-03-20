@@ -82,7 +82,7 @@ If the request is vague, ask 1-3 plain-language questions about what it should *
 All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
 
 1. **Check for Node.js** — Run `node --version`. If not found, give simple install instructions: go to https://nodejs.org, download LTS, install with defaults, come back.
-2. **Check for existing project** — If continuing prior work, find the matching folder in `~/prototypes/` and skip scaffolding.
+2. **Check for existing project** — If continuing prior work, match the user's description against folder names in `~/prototypes/` using fuzzy matching — "grocery" should match `grocery-list`. Also check `.prototype-meta.json` descriptions for better matches. If ambiguous, list the options and ask which one. If only one prototype exists, auto-select it.
 3. **Scaffold** — Run the scaffolding command non-interactively to avoid prompts the user can't answer:
    ```
    npm create vite@latest <project-name> -- --template react-ts
