@@ -15,7 +15,7 @@ When a user opens Claude in this directory or a subdirectory:
 - They are likely continuing work on an existing prototype
 - Check for an existing project folder matching what they describe before scaffolding a new one
 - The prototype-builder skill has full instructions for communication style and workflow
-- `./prototypes/.claude/settings.json` pre-approves common commands — don't modify or remove it
+- `./.claude/settings.json` pre-approves common commands — don't modify or remove its prototype-related entries
 
 ### Matching a user's request to a project folder
 
