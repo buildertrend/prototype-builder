@@ -28,19 +28,20 @@ curl -fsSL https://raw.githubusercontent.com/buildertrend/prototype-builder/main
 
 ### What the installer does
 
-The installer runs 7 steps — no input needed except logging in when your browser opens.
+The installer runs 8 steps — no input needed except logging in when your browser opens.
 
 | Step | What happens |
 |------|-------------|
-| 1. Node.js | Installs Node.js if missing (via Homebrew on Mac, winget on Windows, apt on Linux) |
-| 2. npm | Verifies npm is available (comes with Node) |
-| 3. Files | Downloads commands and skills into `~/.claude/` |
-| 4. Figma | Connects the Figma MCP so Claude can read your designs |
-| 5. Dependencies | Pre-downloads React/Vite so your first prototype starts fast |
-| 6. Sharing tools | Installs Vercel CLI for one-command sharing |
-| 7. Sharing account | Opens your browser to create a free Vercel account |
+| 1. Git | Installs Git if missing (via Homebrew on Mac, winget on Windows, apt on Linux) |
+| 2. Node.js | Installs Node.js if missing (via Homebrew on Mac, winget on Windows, apt on Linux) |
+| 3. npm | Verifies npm is available (comes with Node) |
+| 4. Files | Downloads commands and skills into `~/.claude/` |
+| 5. Figma | Connects the Figma MCP so Claude can read your designs |
+| 6. Dependencies | Pre-downloads React/Vite so your first prototype starts fast |
+| 7. Sharing tools | Installs Vercel CLI for one-command sharing |
+| 8. Sharing account | Opens your browser to create a free Vercel account |
 
-Your browser opens twice during setup — once for Figma (step 4) and once for Vercel (step 7). Just log in when prompted.
+Your browser opens twice during setup — once for Figma (step 5) and once for Vercel (step 8). Just log in when prompted.
 
 The installer is **idempotent** — safe to re-run anytime to update to the latest version.
 
@@ -170,7 +171,7 @@ curl -fsSL https://raw.githubusercontent.com/<you>/prototype-builder/<branch>/in
 ```
 
 Verify:
-- [ ] All 7 install steps complete without errors
+- [ ] All 8 install steps complete without errors
 - [ ] `claude` → `/prototype-create a simple counter app` → app builds and runs
 - [ ] `/prototype-share` → returns a working public URL
 - [ ] Re-running install succeeds (idempotent)

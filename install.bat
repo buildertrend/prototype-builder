@@ -33,9 +33,36 @@ echo.
 set "REPO_BASE=https://raw.githubusercontent.com/buildertrend/prototype-builder/main"
 
 :: ------------------------------------------
-:: 1. Check for Node.js
+:: 1. Check for Git
 :: ------------------------------------------
-echo  [1/7] Checking for Node.js...
+echo  [1/8] Checking for Git...
+where git >nul 2>nul
+if %ERRORLEVEL% neq 0 (
+    echo         Not found. Installing Git...
+    echo.
+    winget install Git.Git --accept-package-agreements --accept-source-agreements
+    if %ERRORLEVEL% neq 0 (
+        echo.
+        echo  ** Automatic install didn't work. **
+        echo  Please go to https://git-scm.com and download
+        echo  the installer. Run it with all the defaults,
+        echo  then run this script again.
+        echo.
+        pause
+        exit /b 1
+    )
+    echo.
+    echo         Installed! Refreshing PATH...
+    set "PATH=%PROGRAMFILES%\Git\cmd;%PATH%"
+) else (
+    for /f "tokens=3" %%v in ('git --version') do echo         Found Git %%v
+)
+echo.
+
+:: ------------------------------------------
+:: 2. Check for Node.js
+:: ------------------------------------------
+echo  [2/8] Checking for Node.js...
 where node >nul 2>nul
 if %ERRORLEVEL% neq 0 (
     echo         Not found. Installing Node.js...
@@ -59,10 +86,10 @@ if %ERRORLEVEL% neq 0 (
 )
 
 :: ------------------------------------------
-:: 2. Check for npm
+:: 3. Check for npm
 :: ------------------------------------------
 echo.
-echo  [2/7] Checking for npm...
+echo  [3/8] Checking for npm...
 where npm >nul 2>nul
 if %ERRORLEVEL% neq 0 (
     echo         npm not found. It should come with Node.js.
@@ -75,10 +102,10 @@ if %ERRORLEVEL% neq 0 (
 )
 
 :: ------------------------------------------
-:: 3. Download and install files from GitHub
+:: 4. Download and install files from GitHub
 :: ------------------------------------------
 echo.
-echo  [3/7] Installing files...
+echo  [4/8] Installing files...
 
 :: Create directories
 if not exist "%USERPROFILE%\.claude\commands" mkdir "%USERPROFILE%\.claude\commands"
@@ -127,10 +154,10 @@ if %ERRORLEVEL% equ 0 (
 )
 
 :: ------------------------------------------
-:: 4. Connect Figma
+:: 5. Connect Figma
 :: ------------------------------------------
 echo.
-echo  [4/7] Connecting Figma...
+echo  [5/8] Connecting Figma...
 where claude >nul 2>nul
 if %ERRORLEVEL% equ 0 (
     call claude mcp add --transport http --scope user figma https://mcp.figma.com/mcp >nul 2>nul
@@ -145,19 +172,19 @@ if %ERRORLEVEL% equ 0 (
 )
 
 :: ------------------------------------------
-:: 5. Pre-warm Vite template cache
+:: 6. Pre-warm Vite template cache
 :: ------------------------------------------
 echo.
-echo  [5/7] Pre-downloading dependencies so your first
+echo  [6/8] Pre-downloading dependencies so your first
 echo         prototype starts faster...
 call npm cache add create-vite@latest vite@latest react@latest react-dom@latest typescript@latest @vitejs/plugin-react@latest 2>nul
 echo         Done!
 
 :: ------------------------------------------
-:: 6. Install Vercel CLI
+:: 7. Install Vercel CLI
 :: ------------------------------------------
 echo.
-echo  [6/7] Installing sharing tools...
+echo  [7/8] Installing sharing tools...
 call npm install -g vercel >nul 2>nul
 if %ERRORLEVEL% neq 0 (
     echo         WARNING: Could not install sharing tools globally.
@@ -165,10 +192,10 @@ if %ERRORLEVEL% neq 0 (
 )
 
 :: ------------------------------------------
-:: 7. Vercel login
+:: 8. Vercel login
 :: ------------------------------------------
 echo.
-echo  [7/7] Setting up sharing account...
+echo  [8/8] Setting up sharing account...
 echo.
 echo         Your browser will open so you can create a free
 echo         account (or log in). This lets you share your

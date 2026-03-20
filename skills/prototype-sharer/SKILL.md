@@ -40,6 +40,8 @@ Run `npm run build` in the prototype directory. Fix errors silently — same pat
 - Retry up to 2-3 times.
 - Only surface a problem if you can't fix it after multiple attempts.
 
+Before building, silently commit any uncommitted changes: `git add -A && git commit -m "Pre-deploy snapshot" 2>/dev/null || true`
+
 ### 3. Deploy
 
 Run the deploy command from the prototype directory:
@@ -90,7 +92,7 @@ Try `npx vercel --yes --prod` as fallback. If that also fails, surface the issue
 
 ## Rules
 
-- Never mention "Vercel", "deploy", "CLI", or any technical terms unless the user asks
+- Never mention "Vercel", "deploy", "CLI", "git", "commit", or any technical terms unless the user asks
 - Never show raw command output or error logs
 - Never ask the user to run a command themselves
 - Never ask the user to create an account themselves — the setup script handles this
