@@ -20,6 +20,16 @@ Translate plain-language descriptions of web applications into working prototype
 
 Always use Node.js, Vite, TypeScript, and React. Never surface these names unless explicitly asked.
 
+## Git (silent)
+
+Track prototype history with git. NEVER mention git, commits, or version control to the user.
+
+- **Init:** After `npm install` on a new project, run `git init`, `git add -A`, `git commit -m "Initial scaffold"`. If resuming an existing project that has no `.git/` directory, do the same before making changes.
+- **Identity:** If a commit fails because no git user is configured, silently run `git config user.email "prototype@local" && git config user.name "Prototype Builder"` in the project directory, then retry.
+- **After first working version:** `git add -A && git commit -m "First working version: <one-line description>"`
+- **After each iteration:** When you tell the user to refresh, also run `git add -A && git commit -m "<what changed>"` silently.
+- All git commands must suppress output. If a commit fails, ignore it and move on.
+
 ## Figma Integration
 
 The user likely works in Figma. When they share a Figma link or mention a Figma file:
@@ -82,14 +92,15 @@ If the request is vague, ask 1-3 plain-language questions about what it should *
 All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
 
 1. **Check for Node.js** — Run `node --version`. If not found, give simple install instructions: go to https://nodejs.org, download LTS, install with defaults, come back.
-2. **Check for existing project** — If continuing prior work, match the user's description against folder names in `~/prototypes/` using fuzzy matching — "grocery" should match `grocery-list`. Also check `.prototype-meta.json` descriptions for better matches. If ambiguous, list the options and ask which one. If only one prototype exists, auto-select it.
-3. **Scaffold** — Run the scaffolding command non-interactively to avoid prompts the user can't answer:
+2. **Create settings if missing** — If `~/prototypes/.claude/settings.json` doesn't exist, create the directory and copy the permissions settings from `prototypes-settings.json` in the plugin root. This is invisible housekeeping — never mention it to the user.
+3. **Check for existing project** — If continuing prior work, match the user's description against folder names in `~/prototypes/` using fuzzy matching — "grocery" should match `grocery-list`. Also check `.prototype-meta.json` descriptions for better matches. If ambiguous, list the options and ask which one. If only one prototype exists, auto-select it. If the project has no `.git/` directory, silently init git and commit current state before making changes.
+4. **Scaffold** — Run the scaffolding command non-interactively to avoid prompts the user can't answer:
    ```
    npm create vite@latest <project-name> -- --template react-ts
    ```
    Pick a short, descriptive project name (e.g., `grocery-list`, `workout-tracker`). The `--` separator and `--template` flag prevent interactive prompts.
-4. **Install dependencies** — `cd` into the new project and run `npm install`.
-5. **Write project metadata** — Create `.prototype-meta.json` in the project root:
+5. **Install dependencies** — `cd` into the new project and run `npm install`. Then silently init git and make the initial commit (see "Git (silent)" section).
+6. **Write project metadata** — Create `.prototype-meta.json` in the project root:
    ```json
    {
      "name": "<project-name>",
@@ -99,7 +110,7 @@ All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
    }
    ```
    This is invisible bookkeeping — never mention it to the user.
-6. **Start the dev server** — Create `.claude/launch.json` in the project directory with this content (replace `<project-name>` with the actual name):
+7. **Start the dev server** — Create `.claude/launch.json` in the project directory with this content (replace `<project-name>` with the actual name):
    ```json
    {
      "version": "0.0.1",
@@ -115,8 +126,8 @@ All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
    }
    ```
    Then use `preview_start` to run the dev server. This gives a live preview without requiring the user to open a browser tab manually. If `preview_start` is not available, fall back to `npm run dev` in background bash.
-7. **Handle port conflicts** — If the dev server fails because a port is in use, retry with `--port 5174`, then `5175`, etc. Do not ask the user to close other terminals unless 3 ports have failed.
-8. **Confirm** — Tell the user the app is running and their project is saved:
+8. **Handle port conflicts** — If the dev server fails because a port is in use, retry with `--port 5174`, then `5175`, etc. Do not ask the user to close other terminals unless 3 ports have failed.
+9. **Confirm** — Tell the user the app is running and their project is saved:
    > "Your app is live! You should see it in the preview. Your project is saved in your prototypes folder, so you can come back to it anytime."
 
 ### 3. Build
@@ -131,11 +142,14 @@ After the first working version:
 
 > "Take a look in your browser — you should see [description of what they'll see]. Let me know what you'd like to change!"
 
+Silently commit: `git add -A && git commit -m "First working version: <short description>"`
+
 ### 4. Iterate
 
 The user says what to change. Restate in one sentence, make the changes, tell them to refresh.
 
 - After each change: "Refresh your browser — you'll see [what changed]."
+- Silently commit after each change: `git add -A && git commit -m "<what changed>"`
 - If the dev server stopped, restart it without bothering the user.
 
 ### 5. Share (if asked)
@@ -166,3 +180,4 @@ When surfacing an issue, keep it simple and actionable:
 - Never use jargon without immediately explaining the behavior it refers to
 - Never leave the app in a broken state while making changes
 - Never present multiple technical options and ask them to pick
+- Never mention git, commits, or version control to the user

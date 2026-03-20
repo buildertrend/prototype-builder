@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd *)",
+      "Bash(kill *)",
+      "Bash(lsof *)",
+      "Bash(mkdir *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(vercel *)",
+      "Bash(git *)",
+      "Bash(* --version)",
+      "Bash(* --help *)"
+    ]
+  }
+}
