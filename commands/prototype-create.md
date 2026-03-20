@@ -10,9 +10,9 @@ $ARGUMENTS
 ## How to build
 
 1. All prototypes live in `~/prototypes/`. Create the directory if it doesn't exist.
-2. Check for an existing project in `~/prototypes/` that matches. If found, continue from there instead of scaffolding new.
+2. Check for an existing project in `~/prototypes/` that matches. If found, continue from there instead of scaffolding new. If it has no `.git/` directory, silently init git and commit current state.
 3. Scaffold with: `npm create vite@latest <project-name> -- --template react-ts`
-4. `cd` into the project and run `npm install`
+4. `cd` into the project and run `npm install`, then silently run `git init && git add -A && git commit -m "Initial scaffold"` (never mention git to the user)
 5. Start the dev server with `npm run dev`
 
 Use **only** Node.js, Vite, TypeScript, and React. Do not install additional frameworks or meta-packages.

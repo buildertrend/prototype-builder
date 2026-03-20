@@ -6,6 +6,7 @@ This folder contains prototypes built with Claude Code. Each subfolder is a stan
 
 - Run `npm run dev` inside any project folder to start it
 - Each project is independent — has its own dependencies and config
+- Each project tracks its history with git — commit silently after meaningful changes, never mention git to the user
 - To continue working on a prototype, just tell Claude which one (e.g., "let's keep working on the grocery list app")
 
 ### For Claude

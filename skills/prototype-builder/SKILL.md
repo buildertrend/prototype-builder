@@ -18,6 +18,16 @@ Translate plain-language descriptions of web applications into working prototype
 
 Always use Node.js, Vite, TypeScript, and React. Never surface these names unless explicitly asked.
 
+## Git (silent)
+
+Track prototype history with git. NEVER mention git, commits, or version control to the user.
+
+- **Init:** After `npm install` on a new project, run `git init`, `git add -A`, `git commit -m "Initial scaffold"`. If resuming an existing project that has no `.git/` directory, do the same before making changes.
+- **Identity:** If a commit fails because no git user is configured, silently run `git config user.email "prototype@local" && git config user.name "Prototype Builder"` in the project directory, then retry.
+- **After first working version:** `git add -A && git commit -m "First working version: <one-line description>"`
+- **After each iteration:** When you tell the user to refresh, also run `git add -A && git commit -m "<what changed>"` silently.
+- All git commands must suppress output. If a commit fails, ignore it and move on.
+
 ## Figma Integration
 
 The user likely works in Figma. When they share a Figma link or mention a Figma file:
@@ -80,13 +90,13 @@ If the request is vague, ask 1-3 plain-language questions about what it should *
 All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
 
 1. **Check for Node.js** — Run `node --version`. If not found, give simple install instructions: go to https://nodejs.org, download LTS, install with defaults, come back.
-2. **Check for existing project** — If continuing prior work, find the matching folder in `~/prototypes/` and skip scaffolding.
+2. **Check for existing project** — If continuing prior work, find the matching folder in `~/prototypes/` and skip scaffolding. If the project has no `.git/` directory, silently init git and commit current state.
 3. **Scaffold** — Run the scaffolding command non-interactively to avoid prompts the user can't answer:
    ```
    npm create vite@latest <project-name> -- --template react-ts
    ```
    Pick a short, descriptive project name (e.g., `grocery-list`, `workout-tracker`). The `--` separator and `--template` flag prevent interactive prompts.
-4. **Install dependencies** — `cd` into the new project and run `npm install`.
+4. **Install dependencies** — `cd` into the new project and run `npm install`. Then silently init git and make the initial commit (see "Git (silent)" section).
 5. **Start the dev server** — Create `.claude/launch.json` in the project directory and use `preview_start` to run the dev server. This gives a live preview without requiring the user to open a browser tab manually. If `preview_start` is not available, fall back to `npm run dev` in background bash.
 6. **Handle port conflicts** — If the dev server fails because a port is in use, retry with `--port 5174`, then `5175`, etc. Do not ask the user to close other terminals unless 3 ports have failed.
 7. **Confirm** — Tell the user the app is running and their project is saved:
@@ -104,11 +114,14 @@ After the first working version:
 
 > "Take a look in your browser — you should see [description of what they'll see]. Let me know what you'd like to change!"
 
+Silently commit: `git add -A && git commit -m "First working version: <short description>"`
+
 ### 4. Iterate
 
 The user says what to change. Restate in one sentence, make the changes, tell them to refresh.
 
 - After each change: "Refresh your browser — you'll see [what changed]."
+- Silently commit after each change: `git add -A && git commit -m "<what changed>"`
 - If the dev server stopped, restart it without bothering the user.
 
 ### 5. Share (if asked)
@@ -139,3 +152,4 @@ When surfacing an issue, keep it simple and actionable:
 - Never use jargon without immediately explaining the behavior it refers to
 - Never leave the app in a broken state while making changes
 - Never present multiple technical options and ask them to pick
+- Never mention git, commits, or version control to the user

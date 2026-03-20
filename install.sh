@@ -39,24 +39,81 @@ fi
 echo "  Detected: $OS"
 echo ""
 
+ensure_brew() {
+    if ! command -v brew &>/dev/null; then
+        echo "         Homebrew not found. Installing Homebrew first..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        if [ -f /opt/homebrew/bin/brew ]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [ -f /usr/local/bin/brew ]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+    fi
+    command -v brew &>/dev/null
+}
+
 # ------------------------------------------
-# 1. Check for Node.js
+# 1. Check for Git
 # ------------------------------------------
-echo "  [1/7] Checking for Node.js..."
+echo "  [1/8] Checking for Git..."
+if ! command -v git &>/dev/null; then
+    echo "         Not found. Installing Git..."
+    if [ "$OS" = "mac" ]; then
+        if ensure_brew; then
+            brew install git
+        else
+            echo ""
+            echo "  ** Could not install Homebrew. **"
+            echo "  Please install Git from https://git-scm.com"
+            echo "  then run this script again."
+            exit 1
+        fi
+    elif [ "$OS" = "windows" ]; then
+        if command -v winget &>/dev/null; then
+            winget install Git.Git --accept-package-agreements --accept-source-agreements
+            export PATH="$PROGRAMFILES/Git/cmd:$PATH"
+        else
+            echo ""
+            echo "  ** Please install Git from https://git-scm.com **"
+            echo "  Download the installer, run it, then"
+            echo "  close and reopen Git Bash and run this script again."
+            exit 1
+        fi
+    elif [ "$OS" = "linux" ] || [ "$OS" = "wsl" ]; then
+        if command -v apt-get &>/dev/null; then
+            echo "         Using apt to install Git..."
+            sudo apt-get install -y git
+        elif command -v dnf &>/dev/null; then
+            sudo dnf install -y git
+        else
+            echo ""
+            echo "  ** Please install Git from https://git-scm.com **"
+            echo "  then run this script again."
+            exit 1
+        fi
+    fi
+
+    if ! command -v git &>/dev/null; then
+        echo ""
+        echo "  ** Git installation didn't seem to work. **"
+        echo "  Please install it from https://git-scm.com"
+        echo "  then run this script again."
+        exit 1
+    fi
+    echo "         Installed Git $(git --version | cut -d' ' -f3)"
+else
+    echo "         Found Git $(git --version | cut -d' ' -f3)"
+fi
+
+# ------------------------------------------
+# 2. Check for Node.js
+# ------------------------------------------
+echo ""
+echo "  [2/8] Checking for Node.js..."
 if ! command -v node &>/dev/null; then
     echo "         Not found. Installing Node.js..."
     if [ "$OS" = "mac" ]; then
-        if ! command -v brew &>/dev/null; then
-            echo "         Homebrew not found. Installing Homebrew first..."
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            # Add brew to PATH for this session
-            if [ -f /opt/homebrew/bin/brew ]; then
-                eval "$(/opt/homebrew/bin/brew shellenv)"
-            elif [ -f /usr/local/bin/brew ]; then
-                eval "$(/usr/local/bin/brew shellenv)"
-            fi
-        fi
-        if command -v brew &>/dev/null; then
+        if ensure_brew; then
             brew install node
         else
             echo ""
@@ -106,10 +163,10 @@ else
 fi
 
 # ------------------------------------------
-# 2. Check for npm
+# 3. Check for npm
 # ------------------------------------------
 echo ""
-echo "  [2/7] Checking for npm..."
+echo "  [3/8] Checking for npm..."
 if ! command -v npm &>/dev/null; then
     echo "  npm not found. It should come with Node.js."
     echo "  Try closing this terminal and running setup again."
@@ -118,10 +175,10 @@ fi
 echo "         Found npm $(npm --version)"
 
 # ------------------------------------------
-# 3. Install files from GitHub
+# 4. Install files from GitHub
 # ------------------------------------------
 echo ""
-echo "  [3/7] Installing files..."
+echo "  [4/8] Installing files..."
 
 # Create directories
 mkdir -p "$HOME/.claude/commands" || { echo "  ** Could not create ~/.claude/commands **"; exit 1; }
@@ -149,10 +206,10 @@ download "skills/prototype-sharer/SKILL.md"   "$HOME/.claude/skills/prototype-sh
 download "prototypes-CLAUDE.md"               "$HOME/prototypes/CLAUDE.md"                       "prototypes CLAUDE.md"
 
 # ------------------------------------------
-# 4. Connect Figma
+# 5. Connect Figma
 # ------------------------------------------
 echo ""
-echo "  [4/7] Connecting Figma..."
+echo "  [5/8] Connecting Figma..."
 if command -v claude &>/dev/null; then
     claude mcp add --transport http --scope user figma https://mcp.figma.com/mcp &>/dev/null || true
     echo "         Figma MCP configured."
@@ -168,29 +225,29 @@ else
 fi
 
 # ------------------------------------------
-# 5. Pre-warm dependency cache
+# 6. Pre-warm dependency cache
 # ------------------------------------------
 echo ""
-echo "  [5/7] Pre-downloading dependencies so your first"
+echo "  [6/8] Pre-downloading dependencies so your first"
 echo "        prototype starts faster..."
 npm cache add create-vite@latest vite@latest react@latest react-dom@latest typescript@latest @vitejs/plugin-react@latest 2>/dev/null || true
 echo "         Done!"
 
 # ------------------------------------------
-# 6. Install Vercel CLI
+# 7. Install Vercel CLI
 # ------------------------------------------
 echo ""
-echo "  [6/7] Installing sharing tools..."
+echo "  [7/8] Installing sharing tools..."
 if ! npm install -g vercel &>/dev/null; then
     echo "         WARNING: Could not install sharing tools globally."
     echo "         Sharing will still work, just a bit slower the first time."
 fi
 
 # ------------------------------------------
-# 7. Vercel login
+# 8. Vercel login
 # ------------------------------------------
 echo ""
-echo "  [7/7] Setting up sharing account..."
+echo "  [8/8] Setting up sharing account..."
 echo ""
 echo "        Your browser will open so you can create a free"
 echo "        account (or log in). This lets you share your"
