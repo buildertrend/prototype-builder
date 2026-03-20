@@ -16,14 +16,14 @@ This is a standard Claude Code plugin with `.claude-plugin/plugin.json`. Install
 | Prototype Builder skill | `skills/prototype-builder/SKILL.md` | Auto-triggers on "build me an app", etc. — full build workflow |
 | Prototype Sharer skill | `skills/prototype-sharer/SKILL.md` | Auto-triggers on "share this", etc. — full deploy workflow |
 | Prototype Manager skill | `skills/prototype-manager/SKILL.md` | Auto-triggers on "list my prototypes", etc. — list, status, delete |
-| Prototypes context | `prototypes-CLAUDE.md` | Placed in `~/prototypes/CLAUDE.md` to guide Claude in that directory |
+| Prototypes context | `prototypes-CLAUDE.md` | Placed in `./prototypes/CLAUDE.md` to guide Claude in that directory |
 | CI workflow | `.github/workflows/ci.yml` | Markdown lint + plugin structure validation on push/PR |
 
 ### Data flow
 
 1. User installs plugin → runs `/prototype-setup` once
 2. User describes an app → builder skill triggers automatically
-3. Scaffolds `~/prototypes/<name>/` with `npm create vite@latest -- --template react-ts`
+3. Scaffolds `./prototypes/<name>/` with `npm create vite@latest -- --template react-ts`
 4. Installs deps, starts dev server, builds the app iteratively
 5. User says "share this" → sharer skill triggers automatically
 6. Runs `npm run build` then `vercel --yes --prod`, returns public URL

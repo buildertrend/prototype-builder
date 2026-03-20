@@ -35,7 +35,7 @@ To fully clean up, you can also uninstall the sharing tools:
 npm uninstall -g vercel
 ```
 
-Your prototypes in `~/prototypes/` are **not** deleted.
+Your prototypes in `./prototypes/` are **not** deleted.
 
 ### What this plugin installs
 
@@ -46,7 +46,7 @@ When you run `/prototype-setup`, it:
 - **Installs sharing tools** — installs `vercel` (a free hosting service) so you can share prototypes with a link. This is the only globally installed tool.
 - **Logs you into sharing** — opens your browser once to create a free Vercel account. This is how your prototypes get a public URL.
 
-The plugin only creates files inside `~/prototypes/` (your prototype projects) and your npm cache. It does not modify system files or access anything outside these directories.
+The plugin only creates files inside `./prototypes/` (your prototype projects) and your npm cache. It does not modify system files or access anything outside these directories.
 
 To remove the sharing tools: `npm uninstall -g vercel`
 
@@ -87,7 +87,7 @@ To update a shared prototype after making changes, just say "share this" again. 
 
 ### Come back to a prototype later
 
-Your prototypes are saved in `~/prototypes/`, each in its own folder. To pick up where you left off:
+Your prototypes are saved in `./prototypes/`, each in its own folder. To pick up where you left off:
 
 1. Open a terminal
 2. Type `claude`
@@ -123,7 +123,7 @@ prototype-builder/
 │   │   └── SKILL.md          # Auto-triggers on "list my prototypes", etc.
 │   └── prototype-sharer/
 │       └── SKILL.md          # Auto-triggers on "share this", "get me a link", etc.
-├── prototypes-CLAUDE.md      # CLAUDE.md placed in ~/prototypes/ to guide Claude
+├── prototypes-CLAUDE.md      # CLAUDE.md placed in ./prototypes/ to guide Claude
 ├── CLAUDE.md
 └── README.md
 ```
@@ -135,7 +135,7 @@ Prototype Builder is a [Claude Code](https://docs.anthropic.com/en/docs/claude-c
 - **Skills** are prompt files that Claude auto-triggers based on what the user says. The prototype-builder skill activates on phrases like "build me an app" or "make a dashboard". The prototype-sharer skill activates on "share this" or "get me a link".
 - **`/prototype-setup`** is a one-time command that checks prerequisites (Node.js), pre-warms caches, installs sharing tools, and logs the user into their sharing account.
 - **`.mcp.json`** configures the Figma MCP so Claude can read designs when users paste Figma links.
-- **`prototypes-CLAUDE.md`** is placed in `~/prototypes/` to give Claude context about existing prototypes when the user opens Claude in that directory.
+- **`prototypes-CLAUDE.md`** is placed in `./prototypes/` to give Claude context about existing prototypes when the user opens Claude in that directory.
 
 Both skills are written for non-technical users — all communication describes behavior ("you'll see a list of items"), never implementation ("a React component with useState").
 

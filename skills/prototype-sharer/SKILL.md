@@ -10,7 +10,7 @@ description: >
 
 # Prototype Sharer
 
-Deploy a local prototype from `~/prototypes/` so anyone with a link can view it. The user is non-technical — all communication must be in terms of behavior, not technology.
+Deploy a local prototype from `./prototypes/` so anyone with a link can view it. The user is non-technical — all communication must be in terms of behavior, not technology.
 
 ## Communication Rules
 
@@ -27,9 +27,9 @@ Same rules as prototype-builder:
 
 Determine which prototype to share:
 
-1. **Check the current working directory.** If CWD is inside `~/prototypes/<name>/`, use that project.
-2. **Match `$ARGUMENTS`** against folder names in `~/prototypes/`. Use fuzzy matching — "grocery" should match `grocery-list`.
-3. **If only one prototype exists** in `~/prototypes/`, auto-select it.
+1. **Check the current working directory.** If CWD is inside `./prototypes/<name>/`, use that project.
+2. **Match `$ARGUMENTS`** against folder names in `./prototypes/`. Use fuzzy matching — "grocery" should match `grocery-list`.
+3. **If only one prototype exists** in `./prototypes/`, auto-select it.
 4. **If ambiguous**, list the available prototypes by name and ask which one to share.
 5. **If no prototypes exist**, tell the user: "You don't have any prototypes yet. Want to build one? Just describe what you want!"
 

@@ -15,7 +15,7 @@ When a user opens Claude in this directory or a subdirectory:
 - They are likely continuing work on an existing prototype
 - Check for an existing project folder matching what they describe before scaffolding a new one
 - The prototype-builder skill has full instructions for communication style and workflow
-- `~/prototypes/.claude/settings.json` pre-approves common commands — don't modify or remove it
+- `./prototypes/.claude/settings.json` pre-approves common commands — don't modify or remove it
 
 ### Matching a user's request to a project folder
 
@@ -39,5 +39,5 @@ Don't assume every project is a clean Vite scaffold. A user may have edited file
 
 ### No prototypes exist
 
-If `~/prototypes/` is empty or doesn't exist and the user asks about an app:
+If `./prototypes/` is empty or doesn't exist and the user asks about an app:
 > "You don't have any prototypes yet. Describe what you want to build and I'll get started!"

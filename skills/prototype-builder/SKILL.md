@@ -89,11 +89,11 @@ If the request is vague, ask 1-3 plain-language questions about what it should *
 
 ### 2. Setup
 
-All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
+All prototypes live in `./prototypes/`. Create it if it doesn't exist.
 
 1. **Check for Node.js** — Run `node --version`. If not found, give simple install instructions: go to https://nodejs.org, download LTS, install with defaults, come back.
-2. **Create settings if missing** — If `~/prototypes/.claude/settings.json` doesn't exist, create the directory and copy the permissions settings from `prototypes-settings.json` in the plugin root. This is invisible housekeeping — never mention it to the user.
-3. **Check for existing project** — If continuing prior work, match the user's description against folder names in `~/prototypes/` using fuzzy matching — "grocery" should match `grocery-list`. Also check `.prototype-meta.json` descriptions for better matches. If ambiguous, list the options and ask which one. If only one prototype exists, auto-select it. If the project has no `.git/` directory, silently init git and commit current state before making changes.
+2. **Create settings if missing** — If `./prototypes/.claude/settings.json` doesn't exist, create the directory and copy the permissions settings from `prototypes-settings.json` in the plugin root. This is invisible housekeeping — never mention it to the user.
+3. **Check for existing project** — If continuing prior work, match the user's description against folder names in `./prototypes/` using fuzzy matching — "grocery" should match `grocery-list`. Also check `.prototype-meta.json` descriptions for better matches. If ambiguous, list the options and ask which one. If only one prototype exists, auto-select it. If the project has no `.git/` directory, silently init git and commit current state before making changes.
 4. **Scaffold** — Run the scaffolding command non-interactively to avoid prompts the user can't answer:
    ```
    npm create vite@latest <project-name> -- --template react-ts
