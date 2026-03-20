@@ -17,6 +17,7 @@ This is a standard Claude Code plugin with `.claude-plugin/plugin.json`. Install
 | Prototype Sharer skill | `skills/prototype-sharer/SKILL.md` | Auto-triggers on "share this", etc. — full deploy workflow |
 | Prototype Manager skill | `skills/prototype-manager/SKILL.md` | Auto-triggers on "list my prototypes", etc. — list, status, delete |
 | Prototypes context | `prototypes-CLAUDE.md` | Placed in `~/prototypes/CLAUDE.md` to guide Claude in that directory |
+| CI workflow | `.github/workflows/ci.yml` | Markdown lint + plugin structure validation on push/PR |
 
 ### Data flow
 
@@ -53,6 +54,14 @@ claude --plugin-dir .
 
 This auto-discovers skills from `skills/*/SKILL.md` and commands from `commands/*.md`.
 
+### CI
+
+GitHub Actions runs on push and PR to `main`:
+- **Markdown lint** — `markdownlint-cli2` on all `.md` files (config in `.markdownlint.json`)
+- **Plugin structure validation** — checks JSON files are valid, skill/command files have proper frontmatter, files referenced in docs exist
+
+Run markdown lint locally: `npx markdownlint-cli2 '**/*.md' '#node_modules' '#PLAN.md'`
+
 ### Validation checklist
 
 - [ ] `claude --plugin-dir .` loads the plugin (skills and `/prototype-setup` appear)
@@ -60,6 +69,7 @@ This auto-discovers skills from `skills/*/SKILL.md` and commands from `commands/
 - [ ] `/prototype-setup` checks Node.js, warms cache, installs Vercel, runs login
 - [ ] "build me an app" triggers the builder skill
 - [ ] "share this" triggers the sharer skill
+- [ ] CI passes (`npx markdownlint-cli2` and structure validation)
 
 ### Editing skills and commands
 

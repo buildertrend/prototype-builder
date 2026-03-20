@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint Markdown
+        run: npx markdownlint-cli2 '**/*.md' '#node_modules' '#PLAN.md'
+
+  validate-plugin-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON files
+        run: |
+          echo "Checking .claude-plugin/plugin.json..."
+          node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/plugin.json', 'utf8'))"
+
+          echo "Checking .mcp.json..."
+          node -e "JSON.parse(require('fs').readFileSync('.mcp.json', 'utf8'))"
+
+      - name: Validate skill frontmatter
+        run: |
+          errors=0
+          for skill in skills/*/SKILL.md; do
+            echo "Checking $skill..."
+            if ! head -1 "$skill" | grep -q '^---$'; then
+              echo "ERROR: $skill missing YAML frontmatter"
+              errors=1
+              continue
+            fi
+            if ! grep -q '^name:' "$skill"; then
+              echo "ERROR: $skill missing 'name' field"
+              errors=1
+            fi
+            if ! grep -q '^description:' "$skill"; then
+              echo "ERROR: $skill missing 'description' field"
+              errors=1
+            fi
+          done
+          exit $errors
+
+      - name: Validate command frontmatter
+        run: |
+          errors=0
+          for cmd in commands/*.md; do
+            echo "Checking $cmd..."
+            if ! head -1 "$cmd" | grep -q '^---$'; then
+              echo "ERROR: $cmd missing YAML frontmatter"
+              errors=1
+              continue
+            fi
+            if ! grep -q '^description:' "$cmd"; then
+              echo "ERROR: $cmd missing 'description' field"
+              errors=1
+            fi
+          done
+          exit $errors
+
+      - name: Check referenced files exist
+        run: |
+          errors=0
+          for f in \
+            .claude-plugin/plugin.json \
+            .mcp.json \
+            commands/prototype-setup.md \
+            skills/prototype-builder/SKILL.md \
+            skills/prototype-sharer/SKILL.md \
+            skills/prototype-manager/SKILL.md \
+            prototypes-CLAUDE.md; do
+            if [ ! -f "$f" ]; then
+              echo "ERROR: $f referenced in docs but not found"
+              errors=1
+            fi
+          done
+          exit $errors

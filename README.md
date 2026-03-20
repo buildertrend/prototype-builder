@@ -36,6 +36,19 @@ npm uninstall -g vercel
 
 Your prototypes in `~/prototypes/` are **not** deleted.
 
+### What this plugin installs
+
+When you run `/prototype-setup`, it:
+
+- **Checks for Node.js** — needed to run your prototypes locally. If missing, you'll be asked to install it from nodejs.org.
+- **Downloads build tools** — saves common packages to your computer so prototypes start faster. Nothing runs until you build a prototype.
+- **Installs sharing tools** — installs `vercel` (a free hosting service) so you can share prototypes with a link. This is the only globally installed tool.
+- **Logs you into sharing** — opens your browser once to create a free Vercel account. This is how your prototypes get a public URL.
+
+The plugin only creates files inside `~/prototypes/` (your prototype projects) and your npm cache. It does not modify system files or access anything outside these directories.
+
+To remove the sharing tools: `npm uninstall -g vercel`
+
 ## Getting Started
 
 ### Build your first prototype
@@ -94,12 +107,19 @@ Your prototypes are saved in `~/prototypes/`, each in its own folder. To pick up
 prototype-builder/
 ├── .claude-plugin/
 │   └── plugin.json           # Plugin manifest
+├── .github/
+│   └── workflows/
+│       └── ci.yml            # Markdown lint + plugin structure validation
+├── .gitignore
+├── .markdownlint.json        # Markdownlint config for CI
 ├── .mcp.json                 # Figma MCP configuration
 ├── commands/
 │   └── prototype-setup.md    # /prototype-setup one-time setup command
 ├── skills/
 │   ├── prototype-builder/
 │   │   └── SKILL.md          # Auto-triggers when user describes an app
+│   ├── prototype-manager/
+│   │   └── SKILL.md          # Auto-triggers on "list my prototypes", etc.
 │   └── prototype-sharer/
 │       └── SKILL.md          # Auto-triggers on "share this", "get me a link", etc.
 ├── prototypes-CLAUDE.md      # CLAUDE.md placed in ~/prototypes/ to guide Claude
