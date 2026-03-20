@@ -3,8 +3,9 @@ name: Prototype Sharer
 description: >
   This skill should be used when the user asks to "share this", "share my app",
   "deploy this", "get me a link", "send this to someone", "put this online",
-  "share my prototype", or wants to make their prototype accessible to others
-  via a URL. Deploys local prototypes so anyone with the link can see them.
+  "share my prototype", "publish", "make public", "host this", or wants to
+  make their prototype accessible to others via a URL. Deploys local prototypes
+  so anyone with the link can see them.
 ---
 
 # Prototype Sharer

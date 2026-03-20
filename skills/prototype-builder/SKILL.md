@@ -4,10 +4,12 @@ description: >
   This skill should be used when the user asks to "build me an app",
   "make a website", "create an app that", "I want an app where",
   "build something that", "make me a dashboard", "I need a tool that",
-  "create a page where", or describes a web application they want to see
-  working in their browser. Also triggers on "prototype", "mock up",
-  "build a quick version of", or "can you make". Translates plain-language
-  descriptions into working React web apps for non-technical users.
+  "create a page where", "web app", "landing page", "wireframe",
+  "UI for", "form that", "tool to", or describes a web application
+  they want to see working in their browser. Also triggers on
+  "prototype", "mock up", "build a quick version of", or "can you make".
+  Translates plain-language descriptions into working React web apps
+  for non-technical users.
 ---
 
 # Prototype Builder
@@ -87,7 +89,22 @@ All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
    ```
    Pick a short, descriptive project name (e.g., `grocery-list`, `workout-tracker`). The `--` separator and `--template` flag prevent interactive prompts.
 4. **Install dependencies** — `cd` into the new project and run `npm install`.
-5. **Start the dev server** — Create `.claude/launch.json` in the project directory and use `preview_start` to run the dev server. This gives a live preview without requiring the user to open a browser tab manually. If `preview_start` is not available, fall back to `npm run dev` in background bash.
+5. **Start the dev server** — Create `.claude/launch.json` in the project directory with this content (replace `<project-name>` with the actual name):
+   ```json
+   {
+     "version": "0.0.1",
+     "configurations": [
+       {
+         "name": "<project-name>",
+         "runtimeExecutable": "npm",
+         "runtimeArgs": ["run", "dev"],
+         "port": 5173,
+         "autoPort": true
+       }
+     ]
+   }
+   ```
+   Then use `preview_start` to run the dev server. This gives a live preview without requiring the user to open a browser tab manually. If `preview_start` is not available, fall back to `npm run dev` in background bash.
 6. **Handle port conflicts** — If the dev server fails because a port is in use, retry with `--port 5174`, then `5175`, etc. Do not ask the user to close other terminals unless 3 ports have failed.
 7. **Confirm** — Tell the user the app is running and their project is saved:
    > "Your app is live! You should see it in the preview. Your project is saved in your prototypes folder, so you can come back to it anytime."
@@ -113,8 +130,8 @@ The user says what to change. Restate in one sentence, make the changes, tell th
 
 ### 5. Share (if asked)
 
-If the user wants to share their prototype, use the prototype-sharer skill.
-You can offer: "Want to share this with someone? Just say '/prototype-share' and I'll get you a link."
+If the user wants to share their prototype, the prototype-sharer skill handles it automatically.
+You can offer: "Want to share this with someone? Just say 'share this' and I'll get you a link."
 
 ## Error Handling
 
