@@ -12,7 +12,7 @@ Turn plain-language descriptions into working web apps. No coding needed — jus
 ### Setup
 
 ```bash
-claude plugin install prototype-builder
+claude plugin install buildertrend/prototype-builder
 ```
 
 Then open Claude and run the one-time setup:
