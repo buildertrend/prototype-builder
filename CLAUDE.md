@@ -15,6 +15,7 @@ This is a standard Claude Code plugin with `.claude-plugin/plugin.json`. Install
 | `/prototype-setup` command | `commands/prototype-setup.md` | One-time env setup: Node check, cache warm, Vercel install + login |
 | Prototype Builder skill | `skills/prototype-builder/SKILL.md` | Auto-triggers on "build me an app", etc. — full build workflow |
 | Prototype Sharer skill | `skills/prototype-sharer/SKILL.md` | Auto-triggers on "share this", etc. — full deploy workflow |
+| Prototype Manager skill | `skills/prototype-manager/SKILL.md` | Auto-triggers on "list my prototypes", etc. — list, status, delete |
 | Prototypes context | `prototypes-CLAUDE.md` | Placed in `~/prototypes/CLAUDE.md` to guide Claude in that directory |
 
 ### Data flow

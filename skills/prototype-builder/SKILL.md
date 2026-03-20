@@ -89,7 +89,17 @@ All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
    ```
    Pick a short, descriptive project name (e.g., `grocery-list`, `workout-tracker`). The `--` separator and `--template` flag prevent interactive prompts.
 4. **Install dependencies** — `cd` into the new project and run `npm install`.
-5. **Start the dev server** — Create `.claude/launch.json` in the project directory with this content (replace `<project-name>` with the actual name):
+5. **Write project metadata** — Create `.prototype-meta.json` in the project root:
+   ```json
+   {
+     "name": "<project-name>",
+     "description": "<one-sentence summary of what the user asked for>",
+     "createdAt": "<ISO 8601 timestamp>",
+     "shareUrl": null
+   }
+   ```
+   This is invisible bookkeeping — never mention it to the user.
+6. **Start the dev server** — Create `.claude/launch.json` in the project directory with this content (replace `<project-name>` with the actual name):
    ```json
    {
      "version": "0.0.1",
@@ -105,8 +115,8 @@ All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
    }
    ```
    Then use `preview_start` to run the dev server. This gives a live preview without requiring the user to open a browser tab manually. If `preview_start` is not available, fall back to `npm run dev` in background bash.
-6. **Handle port conflicts** — If the dev server fails because a port is in use, retry with `--port 5174`, then `5175`, etc. Do not ask the user to close other terminals unless 3 ports have failed.
-7. **Confirm** — Tell the user the app is running and their project is saved:
+7. **Handle port conflicts** — If the dev server fails because a port is in use, retry with `--port 5174`, then `5175`, etc. Do not ask the user to close other terminals unless 3 ports have failed.
+8. **Confirm** — Tell the user the app is running and their project is saved:
    > "Your app is live! You should see it in the preview. Your project is saved in your prototypes folder, so you can come back to it anytime."
 
 ### 3. Build

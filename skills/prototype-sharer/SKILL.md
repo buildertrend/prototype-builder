@@ -55,6 +55,8 @@ vercel --yes --prod
 
 **Parse the production URL from the CLI output.** Look for the line containing the production URL (typically the last URL printed, or the line after "Production:").
 
+After parsing the production URL, update `.prototype-meta.json` in the project root — read the existing file, set `shareUrl` to the production URL, and write it back. If the file doesn't exist, create it with at least `name` (from folder name) and `shareUrl`. This is silent bookkeeping — never mention it to the user.
+
 ### 4. Return the URL
 
 Present the result in plain language:
