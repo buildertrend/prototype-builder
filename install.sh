@@ -128,6 +128,7 @@ mkdir -p "$HOME/.claude/commands" || { echo "  ** Could not create ~/.claude/com
 mkdir -p "$HOME/.claude/skills/prototype-builder" || { echo "  ** Could not create skills dir **"; exit 1; }
 mkdir -p "$HOME/.claude/skills/prototype-sharer" || { echo "  ** Could not create skills dir **"; exit 1; }
 mkdir -p "$HOME/prototypes" || { echo "  ** Could not create ~/prototypes **"; exit 1; }
+mkdir -p "$HOME/prototypes/.claude" || { echo "  ** Could not create ~/prototypes/.claude **"; exit 1; }
 
 # Download each file
 download() {
@@ -147,6 +148,7 @@ download "commands/prototype-share.md"        "$HOME/.claude/commands/prototype-
 download "skills/prototype-builder/SKILL.md"  "$HOME/.claude/skills/prototype-builder/SKILL.md"  "prototype-builder skill"
 download "skills/prototype-sharer/SKILL.md"   "$HOME/.claude/skills/prototype-sharer/SKILL.md"   "prototype-sharer skill"
 download "prototypes-CLAUDE.md"               "$HOME/prototypes/CLAUDE.md"                       "prototypes CLAUDE.md"
+download "prototypes-settings.json"            "$HOME/prototypes/.claude/settings.json"            "prototypes settings"
 
 # ------------------------------------------
 # 4. Connect Figma
