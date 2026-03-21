@@ -21,7 +21,7 @@ Then open Claude and run the one-time setup:
 /prototype-setup
 ```
 
-This checks your environment, downloads what's needed for fast builds, and sets up sharing. Your browser will open once during setup for account creation.
+This checks your environment, installs any missing tools (Git, Node.js), and downloads what's needed for fast builds.
 
 ### Uninstall
 
@@ -29,26 +29,16 @@ This checks your environment, downloads what's needed for fast builds, and sets 
 claude plugin remove prototype-builder
 ```
 
-To fully clean up, you can also uninstall the sharing tools:
-
-```bash
-npm uninstall -g vercel
-```
-
-Your prototypes in `./prototypes/` are **not** deleted.
+Your prototypes in `~/prototypes/` are **not** deleted.
 
 ### What this plugin installs
 
 When you run `/prototype-setup`, it:
 
-- **Checks for Node.js** — needed to run your prototypes locally. If missing, you'll be asked to install it from nodejs.org.
+- **Checks for Node.js** — needed to run your prototypes locally. If missing, it will try to install it for you automatically.
 - **Downloads build tools** — saves common packages to your computer so prototypes start faster. Nothing runs until you build a prototype.
-- **Installs sharing tools** — installs `vercel` (a free hosting service) so you can share prototypes with a link. This is the only globally installed tool.
-- **Logs you into sharing** — opens your browser once to create a free Vercel account. This is how your prototypes get a public URL.
 
-The plugin only creates files inside `./prototypes/` (your prototype projects) and your npm cache. It does not modify system files or access anything outside these directories.
-
-To remove the sharing tools: `npm uninstall -g vercel`
+The plugin only creates files inside `~/prototypes/` (your prototype projects) and your npm cache. Sharing tools are downloaded on-demand when you first share a prototype — nothing is permanently installed.
 
 ## Getting Started
 
@@ -77,7 +67,7 @@ Just say what you want to change in plain language:
 - "Make it look better on mobile"
 - "Add a search bar at the top"
 
-Claude keeps the app running while making changes — refresh your browser to see updates.
+Claude keeps the app running while making changes — updates appear in your browser automatically.
 
 ### Share with anyone
 
@@ -87,7 +77,7 @@ To update a shared prototype after making changes, just say "share this" again. 
 
 ### Come back to a prototype later
 
-Your prototypes are saved in `./prototypes/`, each in its own folder. To pick up where you left off:
+Your prototypes are saved in `~/prototypes/`, each in its own folder. To pick up where you left off:
 
 1. Open a terminal
 2. Type `claude`
@@ -123,7 +113,9 @@ prototype-builder/
 │   │   └── SKILL.md          # Auto-triggers on "list my prototypes", etc.
 │   └── prototype-sharer/
 │       └── SKILL.md          # Auto-triggers on "share this", "get me a link", etc.
-├── prototypes-CLAUDE.md      # CLAUDE.md placed in ./prototypes/ to guide Claude
+├── scripts/
+│   ├── approve-commands.sh   # PermissionRequest hook — auto-approves safe Bash commands
+│   └── install-deps.sh       # Auto-installs Git and Node.js if missing
 ├── CLAUDE.md
 └── README.md
 ```
@@ -133,9 +125,9 @@ prototype-builder/
 Prototype Builder is a [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin with **skills** and a **setup command**:
 
 - **Skills** are prompt files that Claude auto-triggers based on what the user says. The prototype-builder skill activates on phrases like "build me an app" or "make a dashboard". The prototype-sharer skill activates on "share this" or "get me a link".
-- **`/prototype-setup`** is a one-time command that checks prerequisites (Node.js), pre-warms caches, installs sharing tools, and logs the user into their sharing account.
+- **`/prototype-setup`** is a one-time command that checks prerequisites (Node.js, Git), pre-warms caches, and prepares the environment for building and sharing prototypes.
 - **`.mcp.json`** configures the Figma MCP so Claude can read designs when users paste Figma links.
-- **`prototypes-CLAUDE.md`** is placed in `./prototypes/` to give Claude context about existing prototypes when the user opens Claude in that directory.
+- **`scripts/approve-commands.sh`** is a PermissionRequest hook that auto-approves safe Bash commands (npm, node, git, etc.) so non-technical users don't get bombarded with permission prompts.
 
 Both skills are written for non-technical users — all communication describes behavior ("you'll see a list of items"), never implementation ("a React component with useState").
 
@@ -155,7 +147,7 @@ claude --plugin-dir /path/to/prototype-builder
 ```
 
 Verify:
-- [ ] `/prototype-setup` checks Node.js, warms cache, installs Vercel, runs login
+- [ ] `/prototype-setup` checks Node.js, warms cache (including Vercel)
 - [ ] "Build me a simple counter app" → app builds and runs
 - [ ] "Share this" → returns a working public URL
 - [ ] Skills auto-trigger on natural language

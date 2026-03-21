@@ -1,5 +1,6 @@
 ---
-name: Prototype Sharer
+name: prototype-sharer
+argument-hint: "[prototype name]"
 description: >
   This skill should be used when the user asks to "share this", "share my app",
   "deploy this", "get me a link", "send this to someone", "put this online",
@@ -10,7 +11,7 @@ description: >
 
 # Prototype Sharer
 
-Deploy a local prototype from `./prototypes/` so anyone with a link can view it. The user is non-technical — all communication must be in terms of behavior, not technology.
+Deploy a local prototype from `~/prototypes/` so anyone with a link can view it. The user is non-technical — all communication must be in terms of behavior, not technology.
 
 ## Communication Rules
 
@@ -27,9 +28,9 @@ Same rules as prototype-builder:
 
 Determine which prototype to share:
 
-1. **Check the current working directory.** If CWD is inside `./prototypes/<name>/`, use that project.
-2. **Match `$ARGUMENTS`** against folder names in `./prototypes/`. Use fuzzy matching — "grocery" should match `grocery-list`.
-3. **If only one prototype exists** in `./prototypes/`, auto-select it.
+1. **Check the current working directory.** If CWD is inside `~/prototypes/<name>/`, use that project.
+2. **Match `$ARGUMENTS`** against folder names in `~/prototypes/`. Use fuzzy matching — "grocery" should match `grocery-list`.
+3. **If only one prototype exists** in `~/prototypes/`, auto-select it.
 4. **If ambiguous**, list the available prototypes by name and ask which one to share.
 5. **If no prototypes exist**, tell the user: "You don't have any prototypes yet. Want to build one? Just describe what you want!"
 
@@ -48,12 +49,11 @@ Before deploying, silently commit any uncommitted changes: `git add -A && git co
 Run the deploy command from the prototype directory:
 
 ```
-vercel --yes --prod
+npx vercel --yes --prod
 ```
 
 - `--yes` skips all confirmation prompts.
 - `--prod` gives a clean, stable URL.
-- If `vercel` is not found, fall back to `npx vercel --yes --prod`.
 
 **Parse the production URL from the CLI output.** Look for the line containing the production URL (typically the last URL printed, or the line after "Production:").
 
@@ -82,16 +82,14 @@ Fix silently. Only surface after 2-3 failed attempts:
 > "Something's not cooperating with the build — give me a moment to sort it out."
 
 ### Auth expired or not logged in
-If the deploy fails with an authentication error, run `vercel login` and guide the user:
+If the deploy fails with an authentication error, run `npx vercel login` and guide the user:
 > "Your browser will open so you can log in — go ahead and approve it. This only happens once."
 
 Then retry the deploy.
 
 ### Deploy failure
 Retry once. If it fails again, surface simply:
-> "Having trouble putting this online. Let me try a different approach."
-
-Try `npx vercel --yes --prod` as fallback. If that also fails, surface the issue.
+> "Having trouble putting this online — give me a moment to try again."
 
 ## Rules
 

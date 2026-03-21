@@ -1,5 +1,7 @@
 ---
-name: Prototype Manager
+name: prototype-manager
+argument-hint: "[list | status | delete]"
+allowed-tools: Read, Glob, Grep, Bash
 description: >
   This skill should be used when the user asks to "list my prototypes",
   "show my prototypes", "what prototypes do I have", "what apps have I built",
@@ -11,7 +13,7 @@ description: >
 
 # Prototype Manager
 
-List, inspect, and delete prototypes in `./prototypes/`. The user is non-technical — all communication must be in terms of behavior, not technology.
+List, inspect, and delete prototypes in `~/prototypes/`. The user is non-technical — all communication must be in terms of behavior, not technology.
 
 ## Communication Rules
 
@@ -26,7 +28,7 @@ Same rules as prototype-builder and prototype-sharer:
 
 ### 1. List
 
-When the user asks to see their prototypes, scan all subfolders in `./prototypes/`.
+When the user asks to see their prototypes, scan all subfolders in `~/prototypes/`.
 
 For each subfolder:
 1. Read `.prototype-meta.json` if it exists — use `name`, `description`, `createdAt`, and `shareUrl`.
@@ -70,14 +72,14 @@ When the user asks to delete or remove a prototype:
    > "Are you sure you want to delete **Grocery List**? The shared link will stop working too."
    If it's not shared:
    > "Are you sure you want to delete **Grocery List**? This can't be undone."
-3. On confirmation, delete the prototype folder (`rm -rf ./prototypes/<name>`).
+3. On confirmation, delete the prototype folder (`rm -rf ~/prototypes/<name>`).
 4. Confirm deletion:
    > "Done — **Grocery List** has been removed."
 
 ## Error Handling
 
 ### No prototypes exist
-If `./prototypes/` is empty or doesn't exist:
+If `~/prototypes/` is empty or doesn't exist:
 > "You don't have any prototypes yet. Want to build one? Just describe what you want!"
 
 ### Missing metadata

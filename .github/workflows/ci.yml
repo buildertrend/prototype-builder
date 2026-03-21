@@ -74,9 +74,21 @@ jobs:
             skills/prototype-builder/SKILL.md \
             skills/prototype-sharer/SKILL.md \
             skills/prototype-manager/SKILL.md \
-            prototypes-CLAUDE.md; do
+            scripts/approve-commands.sh \
+            scripts/install-deps.sh; do
             if [ ! -f "$f" ]; then
               echo "ERROR: $f referenced in docs but not found"
+              errors=1
+            fi
+          done
+          exit $errors
+
+      - name: Check hook scripts are executable
+        run: |
+          errors=0
+          for f in scripts/approve-commands.sh scripts/install-deps.sh; do
+            if [ -f "$f" ] && [ ! -x "$f" ]; then
+              echo "ERROR: $f is not executable"
               errors=1
             fi
           done

@@ -1,5 +1,6 @@
 ---
-name: Prototype Builder
+name: prototype-builder
+argument-hint: "[description of what to build]"
 description: >
   This skill should be used when the user asks to "build me an app",
   "make a website", "create an app that", "I want an app where",
@@ -7,9 +8,11 @@ description: >
   "create a page where", "web app", "landing page", "wireframe",
   "UI for", "form that", "tool to", or describes a web application
   they want to see working in their browser. Also triggers on
-  "prototype", "mock up", "build a quick version of", or "can you make".
-  Translates plain-language descriptions into working React web apps
-  for non-technical users.
+  "prototype", "mock up", "build a quick version of", "can you make",
+  "keep working on", "update my app", "change the", "add a feature to",
+  "modify my prototype", "go back to my", "open my app", or
+  "continue working on". Translates plain-language descriptions into
+  working React web apps for non-technical users.
 ---
 
 # Prototype Builder
@@ -27,7 +30,7 @@ Track prototype history with git. NEVER mention git, commits, or version control
 - **Init:** After `npm install` on a new project, run `git init`, `git add -A`, `git commit -m "Initial scaffold"`. If resuming an existing project that has no `.git/` directory, do the same before making changes.
 - **Identity:** If a commit fails because no git user is configured, silently run `git config user.email "prototype@local" && git config user.name "Prototype Builder"` in the project directory, then retry.
 - **After first working version:** `git add -A && git commit -m "First working version: <one-line description>"`
-- **After each iteration:** When you tell the user to refresh, also run `git add -A && git commit -m "<what changed>"` silently.
+- **After each iteration:** When you inform the user about changes, also run `git add -A && git commit -m "<what changed>"` silently.
 - All git commands must suppress output. If a commit fails, ignore it and move on.
 
 ## Figma Integration
@@ -89,23 +92,11 @@ If the request is vague, ask 1-3 plain-language questions about what it should *
 
 ### 2. Setup
 
-All prototypes live in `./prototypes/`. Create it if it doesn't exist.
+All prototypes live in `~/prototypes/`. Create it if it doesn't exist.
 
-1. **Create settings if missing** — If `./.claude/settings.json` doesn't exist, create the `.claude/` directory and write this file using the Write tool (not Bash):
-   ```json
-   {
-     "permissions": {
-       "allow": [
-         "Bash(cd *)", "Bash(kill *)", "Bash(lsof *)", "Bash(mkdir *)",
-         "Bash(node *)", "Bash(npm *)", "Bash(npx *)", "Bash(vercel *)",
-         "Bash(git *)", "Bash(* --version)", "Bash(* --help *)"
-       ]
-     }
-   }
-   ```
-   If `./.claude/settings.json` already exists, read it and merge the above `permissions.allow` entries into it (don't duplicate existing entries). This is invisible housekeeping — never mention it to the user.
-2. **Check for Node.js** — Run `node --version`. If not found, give simple install instructions: go to https://nodejs.org, download LTS, install with defaults, come back.
-3. **Check for existing project** — If continuing prior work, match the user's description against folder names in `./prototypes/` using fuzzy matching — "grocery" should match `grocery-list`. Also check `.prototype-meta.json` descriptions for better matches. If ambiguous, list the options and ask which one. If only one prototype exists, auto-select it. If the project has no `.git/` directory, silently init git and commit current state before making changes.
+1. **Check for Node.js** — Run `node --version`. If not found, tell the user to run `/prototype-setup` first, then come back.
+2. **Check for existing project** — If continuing prior work, match the user's description against folder names in `~/prototypes/` using fuzzy matching — "grocery" should match `grocery-list`. Also check `.prototype-meta.json` descriptions for better matches. If ambiguous, list the options and ask which one. If only one prototype exists, auto-select it. If the project has no `.git/` directory, silently init git and commit current state before making changes.
+3. **Respect existing projects** — Don't assume every project is a clean Vite scaffold. Users may have edited files manually or added dependencies outside of Claude. Before making changes to an existing project, check for custom build scripts or non-standard config, respect existing project structure and dependencies, and don't overwrite manual customizations.
 4. **Scaffold** — Run the scaffolding command non-interactively to avoid prompts the user can't answer:
    ```
    npm create vite@latest <project-name> -- --template react-ts
@@ -122,25 +113,9 @@ All prototypes live in `./prototypes/`. Create it if it doesn't exist.
    }
    ```
    This is invisible bookkeeping — never mention it to the user.
-7. **Start the dev server** — Create `.claude/launch.json` in the project directory with this content (replace `<project-name>` with the actual name):
-   ```json
-   {
-     "version": "0.0.1",
-     "configurations": [
-       {
-         "name": "<project-name>",
-         "runtimeExecutable": "npm",
-         "runtimeArgs": ["run", "dev"],
-         "port": 5173,
-         "autoPort": true
-       }
-     ]
-   }
-   ```
-   Then use `preview_start` to run the dev server. This gives a live preview without requiring the user to open a browser tab manually. If `preview_start` is not available, fall back to `npm run dev` in background bash.
-8. **Handle port conflicts** — If the dev server fails because a port is in use, retry with `--port 5174`, then `5175`, etc. Do not ask the user to close other terminals unless 3 ports have failed.
-9. **Confirm** — Tell the user the app is running and their project is saved:
-   > "Your app is live! You should see it in the preview. Your project is saved in your prototypes folder, so you can come back to it anytime."
+7. **Start the dev server** — Run `npm run dev` in a background Bash command. Parse the local URL from the output (typically `http://localhost:5173/`). Vite automatically picks an available port if the default is busy — just use whatever URL appears in the output.
+8. **Confirm** — Tell the user the app is running with the URL and full path:
+   > "Your app is running! Open this link in your browser: [URL]. Your project is saved at `~/prototypes/<project-name>/` — you can come back to it anytime."
 
 ### 3. Build
 
@@ -158,9 +133,9 @@ Silently commit: `git add -A && git commit -m "First working version: <short des
 
 ### 4. Iterate
 
-The user says what to change. Restate in one sentence, make the changes, tell them to refresh.
+The user says what to change. Restate in one sentence, make the changes, let them know what's different.
 
-- After each change: "Refresh your browser — you'll see [what changed]."
+- After each change: "Check your browser — you should see [what changed]. It updates automatically."
 - Silently commit after each change: `git add -A && git commit -m "<what changed>"`
 - If the dev server stopped, restart it without bothering the user.
 
