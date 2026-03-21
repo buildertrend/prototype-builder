@@ -6,7 +6,8 @@ description: >
   "deploy this", "get me a link", "send this to someone", "put this online",
   "share my prototype", "publish", "make public", "host this", or wants to
   make their prototype accessible to others via a URL. Deploys local prototypes
-  so anyone with the link can see them.
+  so anyone with the link can see them. Proactively offer to share after a
+  prototype is successfully built.
 ---
 
 # Prototype Sharer

@@ -1,6 +1,7 @@
 ---
 name: prototype-builder
 argument-hint: "[description of what to build]"
+effort: high
 description: >
   This skill should be used when the user asks to "build me an app",
   "make a website", "create an app that", "I want an app where",
@@ -70,13 +71,11 @@ Limit to 1-3 questions before building something. A rough version to react to be
 
 ## Guiding Through Approvals
 
-The user will see permission prompts they don't understand. Before the first batch of tool calls:
+Most operations are auto-approved by the plugin — the user typically won't see permission prompts for common actions like creating files, installing packages, or running the dev server.
 
-> "I'm going to set up your project now. You'll see a few prompts asking for permission — it's safe to approve all of them. These are just me creating files and installing what's needed to run your app."
+If the user does see an unexpected prompt, reassure them briefly:
 
-Before starting the dev server:
-
-> "I'm going to start your app so you can see it in the browser. Approve the next prompt and I'll give you a link to open."
+> "Go ahead and approve that — it's just me setting things up."
 
 Stop giving approval guidance if the user mentions auto-approve or yolo mode.
 
