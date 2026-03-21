@@ -38,9 +38,32 @@ npm cache add create-vite@latest vite@latest react@latest react-dom@latest types
 
 If it fails, continue silently — this is an optimization, not a requirement.
 
-## Step 3: Done
+## Step 3: Set up sharing account
 
-Tell the user: "All set! Describe what you want to build and I'll make it happen. If you want to use Figma designs, just paste a Figma link when describing what to build."
+Tell the user: "Let's set up sharing so you can send your prototypes to anyone with a link. Your browser will open — go ahead and log in or create a free account."
+
+Run:
+```
+npx vercel login 2>&1
+```
+
+- If the command succeeds (prints "Congratulations!" or similar): continue.
+- If it fails or the user cancels: tell the user "No worries — we can set up sharing later when you're ready. Just say 'share this' and I'll walk you through it." Then continue to the next step (this is not a blocker).
+
+## Step 4: Connect Figma (optional)
+
+Tell the user: "One last thing — if you want to build from Figma designs, let's connect that now. Your browser will open for Figma login."
+
+Call any Figma MCP tool (e.g., `mcp__figma__get_file` with a dummy file key) to trigger the MCP authentication flow. The Figma MCP server will prompt the user to authorize via their browser.
+
+- If auth succeeds: tell the user "Figma is connected! You can paste Figma links when describing what to build."
+- If it fails or the user skips: tell the user "No problem — you can connect Figma later by pasting a Figma link when describing what to build." Then continue.
+
+This step is optional — the plugin works fine without Figma.
+
+## Step 5: Done
+
+Tell the user: "All set! Describe what you want to build and I'll make it happen."
 
 ## Communication Rules
 

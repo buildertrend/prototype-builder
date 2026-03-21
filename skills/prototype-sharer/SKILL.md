@@ -92,7 +92,7 @@ Fix silently. Only surface after 2-3 failed attempts:
 
 ### Auth expired or not logged in
 If the deploy fails with an authentication error, run `npx vercel login` and guide the user:
-> "Your browser will open so you can log in — go ahead and approve it. This only happens once."
+> "Your browser will open so you can log in — go ahead and approve it. This only happens once. (You can also run `/prototype-setup` to set everything up at once.)"
 
 Then retry the deploy.
 
