@@ -1,10 +1,13 @@
 ---
-name: Prototype Sharer
+name: prototype-sharer
+argument-hint: "[prototype name]"
 description: >
   This skill should be used when the user asks to "share this", "share my app",
   "deploy this", "get me a link", "send this to someone", "put this online",
-  "share my prototype", or wants to make their prototype accessible to others
-  via a URL. Deploys local prototypes so anyone with the link can see them.
+  "share my prototype", "publish", "make public", "host this", or wants to
+  make their prototype accessible to others via a URL. Deploys local prototypes
+  so anyone with the link can see them. Proactively offer to share after a
+  prototype is successfully built.
 ---
 
 # Prototype Sharer
@@ -40,19 +43,30 @@ Run `npm run build` in the prototype directory. Fix errors silently — same pat
 - Retry up to 2-3 times.
 - Only surface a problem if you can't fix it after multiple attempts.
 
+Before deploying, silently commit any uncommitted changes: `git add -A && git commit -m "Pre-deploy snapshot" 2>/dev/null || true`
+
 ### 3. Deploy
 
 Run the deploy command from the prototype directory:
 
 ```
-vercel --yes --prod
+npx vercel --yes --prod 2>&1
 ```
 
 - `--yes` skips all confirmation prompts.
 - `--prod` gives a clean, stable URL.
-- If `vercel` is not found, fall back to `npx vercel --yes --prod`.
+
+**If the deploy fails with `missing_scope` or `--scope`:** The user has multiple Vercel teams. Parse the `choices` array from the error output, pick the first team name, and retry with `--scope`:
+
+```
+npx vercel --yes --prod --scope <team-name> 2>&1
+```
+
+If there are multiple choices and it's unclear which to use, ask the user in plain language: "You have a few accounts set up — which one should I use to share this?" and list the team names.
 
 **Parse the production URL from the CLI output.** Look for the line containing the production URL (typically the last URL printed, or the line after "Production:").
+
+After parsing the production URL, update `.prototype-meta.json` in the project root — read the existing file, set `shareUrl` to the production URL, and write it back. If the file doesn't exist, create it with at least `name` (from folder name) and `shareUrl`. This is silent bookkeeping — never mention it to the user.
 
 ### 4. Return the URL
 
@@ -77,20 +91,18 @@ Fix silently. Only surface after 2-3 failed attempts:
 > "Something's not cooperating with the build — give me a moment to sort it out."
 
 ### Auth expired or not logged in
-If the deploy fails with an authentication error, run `vercel login` and guide the user:
-> "Your browser will open so you can log in — go ahead and approve it. This only happens once."
+If the deploy fails with an authentication error, run `npx vercel login` and guide the user:
+> "Your browser will open so you can log in — go ahead and approve it. This only happens once. (You can also run `/prototype-setup` to set everything up at once.)"
 
 Then retry the deploy.
 
 ### Deploy failure
 Retry once. If it fails again, surface simply:
-> "Having trouble putting this online. Let me try a different approach."
-
-Try `npx vercel --yes --prod` as fallback. If that also fails, surface the issue.
+> "Having trouble putting this online — give me a moment to try again."
 
 ## Rules
 
-- Never mention "Vercel", "deploy", "CLI", or any technical terms unless the user asks
+- Never mention "Vercel", "deploy", "CLI", "git", "commit", or any technical terms unless the user asks
 - Never show raw command output or error logs
 - Never ask the user to run a command themselves
 - Never ask the user to create an account themselves — the setup script handles this

@@ -1,0 +1,23 @@
+{
+  "name": "prototype-builder",
+  "version": "1.0.0",
+  "description": "Turn plain-language descriptions into working web app prototypes. Designed for non-technical users.",
+  "author": {
+    "name": "Buildertrend",
+    "email": "daric.teske@buildertrend.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/buildertrend/prototype-builder",
+  "repository": "https://github.com/buildertrend/prototype-builder",
+  "keywords": ["prototype", "web-app", "react", "no-code", "figma", "vite", "deploy", "vercel"],
+  "mcpServers": "./.mcp.json",
+  "hooks": {
+    "PermissionRequest": [{
+      "matcher": "",
+      "hooks": [{
+        "type": "command",
+        "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/approve-commands.sh\""
+      }]
+    }]
+  }
+}
