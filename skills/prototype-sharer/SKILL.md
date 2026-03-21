@@ -49,11 +49,19 @@ Before deploying, silently commit any uncommitted changes: `git add -A && git co
 Run the deploy command from the prototype directory:
 
 ```
-npx vercel --yes --prod
+npx vercel --yes --prod 2>&1
 ```
 
 - `--yes` skips all confirmation prompts.
 - `--prod` gives a clean, stable URL.
+
+**If the deploy fails with `missing_scope` or `--scope`:** The user has multiple Vercel teams. Parse the `choices` array from the error output, pick the first team name, and retry with `--scope`:
+
+```
+npx vercel --yes --prod --scope <team-name> 2>&1
+```
+
+If there are multiple choices and it's unclear which to use, ask the user in plain language: "You have a few accounts set up — which one should I use to share this?" and list the team names.
 
 **Parse the production URL from the CLI output.** Look for the line containing the production URL (typically the last URL printed, or the line after "Production:").
 
