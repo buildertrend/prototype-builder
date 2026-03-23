@@ -11,15 +11,23 @@ Turn plain-language descriptions into working web apps. No coding needed — jus
 
 ### Setup
 
-```bash
-claude plugin install buildertrend/prototype-builder
-```
+1. Add the Buildertrend marketplace (one-time):
 
-Then open Claude and run the one-time setup:
+    ```bash
+    claude plugin marketplace add buildertrend/prototype-builder
+    ```
 
-```
-/prototype-setup
-```
+2. Install the plugin:
+
+    ```bash
+    claude plugin install prototype-builder
+    ```
+
+3. Open Claude and run the one-time setup:
+
+    ```text
+    /prototype-setup
+    ```
 
 This checks your environment, installs any missing tools (Git, Node.js), and downloads what's needed for fast builds.
 
@@ -97,6 +105,7 @@ Your prototypes are saved in `~/prototypes/`, each in its own folder. To pick up
 ```
 prototype-builder/
 ├── .claude-plugin/
+│   ├── marketplace.json      # Marketplace manifest (for plugin install)
 │   └── plugin.json           # Plugin manifest
 ├── .github/
 │   └── workflows/
